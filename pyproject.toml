@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fitnesbot"
+version = "0.1.0"
+description = ""
+authors = ["Avaake <133997731+Avaake@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+aiogram = "^3.4.1"
+aiomysql = "^0.2.0"
+python-dotenv = "^1.0.1"
+redis = "^5.0.2"
+aioredis = "^2.0.1"
+pydantic-settings = "^2.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
