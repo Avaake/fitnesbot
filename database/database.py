@@ -59,6 +59,45 @@ class DatabaseManager:
             self.__mydb.close()
             print('Database disconnected!')
 
+    async def verify_the_user_through_middleware(self, telegram_id: int):
+        try:
+            sql_command = """
+                SELECT count(telegram_id) 
+                FROM fitnesdb.users
+                WHERE telegram_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = await cursor.fetchone()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def add_the_user_through_middleware(self, telegram_id: int, first_name: str,
+                                              user_name: str, language_code: str):
+        try:
+            sql_command = """
+                INSERT INTO users (telegram_id, first_name, user_name, language_code)
+                VALUES (%s, %s, %s, %s)
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id, first_name, user_name, language_code))
+                await self.__mydb.commit()  # Очікуйте завершення асинхронного commit
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def update_last_date_the_user_through_middleware(self, telegram_id: int):
+        try:
+            sql_command = """
+                UPDATE users SET last_date = CURRENT_TIMESTAMP
+                WHERE telegram_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                await self.__mydb.cmmit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
     async def add_products(self, username: str, *args: List):
         try:
 
@@ -70,7 +109,7 @@ class DatabaseManager:
             print(values)
             async with self.__mydb.cursor() as cursor:
                 await cursor.execute(sql_command, values)
-            self.__mydb.commit()
+            await self.__mydb.commit()
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 

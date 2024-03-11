@@ -12,6 +12,7 @@ from aioredis import Redis
 from config import settings
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
+from bot.middlewares.register_check import RegisterCheckMiddleware
 
 # redis = Redis()
 storage = MemoryStorage()
@@ -53,6 +54,8 @@ class RunBot:
             self.training_from_athletes.run()
             self.training_at_home.run()
 
+            self.dp.message.middleware(RegisterCheckMiddleware(self.db_manager))
+            # self.dp.callback_query.middleware(RegisterCheckMiddleware(self.db_manager))
             await self.bot.delete_webhook(drop_pending_updates=True)
             await self.dp.start_polling(self.bot)
         finally:
