@@ -5,7 +5,7 @@ from aiogram.types import ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeybo
 from aiogram.types import Message, CallbackQuery
 from database.database import DatabaseManager
 from bot.keybords import fabrics, builders
-from bot.keybords.inline import menu, ad_menu
+from bot.keybords.inline import menu
 from bot.utils.states import AdditiveNamesCall
 from bot.utils.basemodel import BasicInitialisation
 

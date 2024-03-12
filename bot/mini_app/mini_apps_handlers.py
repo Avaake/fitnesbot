@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
-from aiogram.types import Message, WebAppData
+from aiogram.types import Message, WebAppData, CallbackQuery
 from database.database import DatabaseManager
 from bot.keybords import builders
 from bot.utils.basemodel import BasicInitialisation
@@ -12,11 +12,12 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
     def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
         super().__init__(bot, dp, db_manager)
 
-    async def nutrient_calculator_handler(self, message: Message) -> None:
-        await message.answer(
+    async def nutrient_calculator_handler(self, call: CallbackQuery) -> None:
+        await call.message.answer(
             text="Це калькулятор поживних речовин (КБЖВ) який "
                  "порахує потрібну тобі норму калорій для твого способу життя. <b>Тицяй на кнопку</b>",
             reply_markup=builders.webAppKeyboard)
+        await call.answer()
 
     @classmethod
     def __nutrient_calculator(cls,
@@ -67,6 +68,6 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
                                     reply_markup=builders.cancel_kb)
 
     def run(self) -> None:
-        self.dp.message.register(self.nutrient_calculator_handler, Command("nutrientcalculator"))
+        self.dp.callback_query.register(self.nutrient_calculator_handler, F.data == "nutrientcalculator")
         self.dp.message.register(self.nutrient_calculator_web_handler,
                                  F.web_app_data.button_text == "🧮 Калькулятор калорій та БЖВ")
