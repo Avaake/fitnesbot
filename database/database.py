@@ -94,7 +94,7 @@ class DatabaseManager:
             """
             async with self.__mydb.cursor() as cursor:
                 await cursor.execute(sql_command, (telegram_id,))
-                await self.__mydb.cmmit()
+                await self.__mydb.commit()
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 

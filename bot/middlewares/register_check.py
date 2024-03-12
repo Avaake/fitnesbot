@@ -7,6 +7,9 @@ import logging
 
 
 class RegisterCheckMiddleware(BaseMiddleware):
+    """
+        Перевіряє чи існую користувач в БД, якщо ні то додає його
+    """
     def __init__(self, db_manager: DatabaseManager):
         self.db_manager = db_manager
 
