@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Dispatcher, Bot
-from bot.handlers import user_command, products, foodcount
+from bot.handlers import user_command, products, foodcount, my_account
 from database.database import DatabaseManager
 from bot.callbacks import (pagination, callback_food_list, spotting_exercises_call, sport_food_supplements_list,
                            training_from_athletes, training_at_home)
@@ -39,6 +39,7 @@ class RunBot:
         self.training_from_athletes = training_from_athletes.TrainingFromAthletes(bot=self.bot, dp=self.dp,
                                                                                   db_manager=self.db_manager)
         self.training_at_home = training_at_home.TrainingAtHome(bot=self.bot, dp=self.dp, db_manager=self.db_manager)
+        self.my_account = my_account.MyAccount(bot=self.bot, dp=self.dp, db_manager=self.db_manager)
 
     async def main(self):
         try:
@@ -53,6 +54,7 @@ class RunBot:
             self.mini_apps_handlers.run()
             self.training_from_athletes.run()
             self.training_at_home.run()
+            self.my_account.run()
 
             self.dp.message.middleware(RegisterCheckMiddleware(self.db_manager))
             # self.dp.callback_query.middleware(RegisterCheckMiddleware(self.db_manager))
