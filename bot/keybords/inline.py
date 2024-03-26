@@ -39,7 +39,7 @@ category_food = InlineKeyboardMarkup(
             InlineKeyboardButton(text="🥩🍗 М’ясо, субпродукти, птиця", callback_data='meat_offal_poultry')
         ],
         [
-            InlineKeyboardButton(text="🥫 Ковбасні вироби, м’ясні консерви", callback_data='sausage_product_canned_meat'),
+            InlineKeyboardButton(text="🥫 Ковбасні вироби, м’ясні консерви", callback_data='sausage_product_canned_meat' ),
             InlineKeyboardButton(text="🥛🧀 Молочні продукти", callback_data='dairy_product')
         ],
         [
@@ -117,7 +117,7 @@ my_account_menu = InlineKeyboardMarkup(
             InlineKeyboardButton(text='Розрахуй дену калорійність', callback_data='nutrientcalculator'),
         ],
         [
-            InlineKeyboardButton(text='Мої тренування', callback_data='my_workout_account'),
+            InlineKeyboardButton(text='Мої тренування', callback_data='my_account_workout'),
             InlineKeyboardButton(text='Плей листи', callback_data='Playlists'),
         ],
         [
@@ -129,12 +129,25 @@ my_account_menu = InlineKeyboardMarkup(
 playlists_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="modrama playlist", url="https://open.spotify.com/playlist/7G34Mp6iJSJBuc911OD6F1?si=b605259e905f4d69"),
-            InlineKeyboardButton(text="Motivation for Gym", url="https://open.spotify.com/playlist/6d9aGZeMXdaDBNATKW1yh0?si=cd42a6a16cc547a0")
+            InlineKeyboardButton(text="modrama playlist",
+                                 url="https://open.spotify.com/playlist/7G34Mp6iJSJBuc911OD6F1?si=b605259e905f4d69"),
+            InlineKeyboardButton(text="Motivation for Gym",
+                                 url="https://open.spotify.com/playlist/6d9aGZeMXdaDBNATKW1yh0?si=cd42a6a16cc547a0")
         ],
         [
-            InlineKeyboardButton(text="Фонк для спорта", url="https://open.spotify.com/playlist/4XnQyLTCTAuGk5SwGscwfo?si=cb1fdbbc19f94e05"),
-            InlineKeyboardButton(text="Gym Rock", url="https://open.spotify.com/playlist/3Z7fIVX3AWyZTrVOXZrPBQ?si=63ae2c78357042cb")
+            InlineKeyboardButton(text="Фонк для спорта",
+                                 url="https://open.spotify.com/playlist/4XnQyLTCTAuGk5SwGscwfo?si=cb1fdbbc19f94e05"),
+            InlineKeyboardButton(text="Gym Rock",
+                                 url="https://open.spotify.com/playlist/3Z7fIVX3AWyZTrVOXZrPBQ?si=63ae2c78357042cb")
+        ],
+        [
+            InlineKeyboardButton(text="Фонк",
+                                 url="https://open.spotify.com/playlist/4KYblBzmoGBfV8cRk1lNXz?si=b2223d33ed6d4d28"),
+            InlineKeyboardButton(text="Плейлист 1",
+                                 url="https://open.spotify.com/playlist/529ZfKd0HmJDHOUF3ae2gQ?si=7010b7aab8064876")
+        ],
+        [
+            InlineKeyboardButton(text="Назад", callback_data="my_account")
         ]
     ]
 )

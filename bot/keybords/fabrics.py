@@ -30,6 +30,11 @@ class PaginationTrainingAtHome(CallbackData, prefix="pagtrainingathome"):
     page: int
 
 
+class PaginationMySportsExercisesInTraining(CallbackData, prefix="pagmysportsexercisesintraining"):
+    action: str
+    page: int
+
+
 def paginator(page: int = 0):
     builder = InlineKeyboardBuilder()
     builder.row(
@@ -83,6 +88,20 @@ def paginator_training_at_home(backwards: str, page: int = 0) -> InlineKeyboardM
     return builder.as_markup()
 
 
+def pagination_my_sports_exercises_in_training_kb(page: int = 0) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.add(
+        InlineKeyboardButton(text='⬅',
+                             callback_data=PaginationMySportsExercisesInTraining(action="preliminary_mseit",
+                                                                                 page=page).pack()),
+        InlineKeyboardButton(text="Додати до тренування", callback_data="add_to_your_workout"),
+        InlineKeyboardButton(text='➡',
+                             callback_data=PaginationMySportsExercisesInTraining(action="next_mseit",
+                                                                                 page=page).pack())
+    )
+    return builder.as_markup()
+
+
 def build_inline_keyboard_sql(buttons: list):
     # call_buttons = [{'text': ''.join(buttons[i]), 'callback_data': f(str(buttons[i]))} for i in range(len(buttons))]
     call_buttons = []
@@ -129,6 +148,7 @@ def build_inline_keyboard(buttons: list, add_cb: str = None):
 
 def inline_builder_sql(buttons: List[tuple],
                        sizes: int | List[int] = 2,
+                       add_txt: str = "Назад",
                        add_cb: str = None,
                        call_url: str = None) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
@@ -140,7 +160,7 @@ def inline_builder_sql(buttons: List[tuple],
     if call_url is not None:
         builder.row(InlineKeyboardButton(text="Купуйте перевірене", url=call_url))
     if add_cb is not None:
-        builder.row(InlineKeyboardButton(text="Назад", callback_data=add_cb))
+        builder.row(InlineKeyboardButton(text=add_txt, callback_data=add_cb))
     return builder.as_markup()
 
 

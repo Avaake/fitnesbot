@@ -19,3 +19,8 @@ FROM training_programmes_from_athletes tpfa
 JOIN athletes ath ON tpfa.athlete_id = ath.athlete_id
 JOIN day_workout dy ON tpfa.day_workout_id = dy.day_workout_id
 WHERE ath.call_initial = 'ar1';
+
+
+SELECT exercise_photo, exercise
+FROM sports_exercises
+WHERE muscl_id = 1;

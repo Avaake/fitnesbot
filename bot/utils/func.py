@@ -18,7 +18,12 @@ CALL_MUSCLE_GROUP_IN_TRAINER = {'hrydy': 'Гриди', 'bitseps': 'Біцепс'
                                 'plechy': 'Плечи',
                                 'trytseps': 'Трицепс', 'peredplichchya': 'Передпліччя', 'nohy': 'Ноги', 'ikry': 'Ікри'}
 
-
+MY_WORKOUT_DAY = {
+    "call_worckout_day_monday": 1, "call_worckout_day_tuesday": 2,
+    "call_worckout_day_wednesday": 3, "call_worckout_day_thursday": 4,
+    "call_worckout_day_friday": 5, "call_worckout_day_saturday": 6,
+    "call_worckout_day_sunday": 7
+}
 
 
 def isfloat(value):
@@ -48,6 +53,7 @@ class WorkoutDay:
 
 class MuscleGroup:
     muscle_group: str
+
 
 class MuscleID:
     muscle_id: str
