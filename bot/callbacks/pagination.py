@@ -6,7 +6,7 @@ from bot.keybords import fabrics
 from contextlib import suppress
 from aiogram.types import CallbackQuery
 from bot.utils import func
-from bot.utils.states import MuscleIDs, TrainingAtHomeCall
+from bot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout
 from bot.utils.basemodel import BasicInitialisation
 
 muscle = func.MuscleID
@@ -97,6 +97,26 @@ class Pagin(BasicInitialisation):
                 reply_markup=fabrics.paginator_training_at_home(backwards=backwards, page=page)
             )
 
+    async def pagination_my_sports_exercises_in_training(self,
+                                                         call: CallbackQuery,
+                                                         callback_data: fabrics.PaginationMySportsExercisesInTraining,
+                                                         state: FSMContext):
+        await state.set_state(CreateMyWorkout.sporting_exercise)
+        data = await state.get_data()
+        print(data)
+        response = await self.db_manager.my_sports_exercises_in_training(data.get('muscle_group'))
+        page_num = int(callback_data.page)
+
+        page = page_num - 1 if page_num > 0 else 0
+
+        if callback_data.action == "next_mseit":
+            page = page_num + 1 if page_num < (len(response) - 1) else page_num
+
+        await state.update_data(sporting_exercise=response[page][1])
+        with suppress(TelegramBadRequest):
+            await call.message.edit_text(text=f'<b>Назва<a href="{response[page][0]}">:</a></b> {response[page][1]}',
+                                         reply_markup=fabrics.pagination_my_sports_exercises_in_training_kb(page=page))
+
     def run(self):
         self.dp.callback_query.register(self.paginator_my_workout,
                                         fabrics.Pagination.filter(F.action.in_(['preliminary', 'next'])))
@@ -107,3 +127,6 @@ class Pagin(BasicInitialisation):
         self.dp.callback_query.register(self.paginator_training_home,
                                         fabrics.PaginationTrainingAtHome.filter(F.action.in_(['preliminary_triathome',
                                                                                               'next_triathome'])))
+        self.dp.callback_query.register(self.pagination_my_sports_exercises_in_training,
+                                        fabrics.PaginationMySportsExercisesInTraining.filter(F.action.in_(
+                                            ['preliminary_mseit', 'next_mseit'])))

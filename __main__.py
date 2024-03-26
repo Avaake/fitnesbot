@@ -65,7 +65,7 @@ class RunBot:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO,
+    logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
                                ' - (Line: %(lineno)d [%(filename)s - %(funcName)s])')
     try:

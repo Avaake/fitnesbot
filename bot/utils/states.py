@@ -30,3 +30,9 @@ class AdditiveNamesCall(StatesGroup):
 
 class TrainingAtHomeCall(StatesGroup):
     title_call = State()
+
+
+class CreateMyWorkout(StatesGroup):
+    workout_day = State()
+    muscle_group = State()
+    sporting_exercise = State()

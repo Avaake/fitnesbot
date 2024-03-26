@@ -51,7 +51,7 @@ class DatabaseManager:
                 )
                 print('Database connected!')
             except aiomysql.Error as exc:
-                logging.error(f"{exc}")
+                logging.critical(f"{exc}")
 
     async def disconnect_db(self):
         """виконує дісконект """
@@ -89,7 +89,7 @@ class DatabaseManager:
     async def update_last_date_the_user_through_middleware(self, telegram_id: int):
         try:
             sql_command = """
-                UPDATE users SET last_date = CURRENT_TIMESTAMP
+                UPDATE users SET last_update = CURRENT_TIMESTAMP
                 WHERE telegram_id = %s
             """
             async with self.__mydb.cursor() as cursor:
@@ -228,7 +228,7 @@ class DatabaseManager:
                 SELECT DISTINCT day_workout, day_workout_en
                 FROM training_programmes_from_athletes tpfa
                 JOIN athletes ath ON tpfa.athlete_id = ath.athlete_id
-                JOIN day_workout dy ON tpfa.day_workout_id = dy.day_workout_id
+                JOIN day_workout_athletes dy ON tpfa.day_workout_id = dy.day_workout_id
                 WHERE ath.call_initial = %s
             """
 
@@ -246,7 +246,7 @@ class DatabaseManager:
                 SELECT DISTINCT muscl
                 FROM training_programmes_from_athletes tpfa
                 JOIN athletes ath ON tpfa.athlete_id = ath.athlete_id
-                JOIN day_workout dy ON tpfa.day_workout_id = dy.day_workout_id
+                JOIN day_workout_athletes dy ON tpfa.day_workout_id = dy.day_workout_id
                 JOIN muscles m ON tpfa.muscl_id = m.muscl_id
                 WHERE ath.call_initial = %s and dy.day_workout_en = %s
             """
@@ -264,7 +264,7 @@ class DatabaseManager:
                 SELECT se.exercise_photo, se.exercise, tpfa.approaches, tpfa.repetition, se.link
                 FROM training_programmes_from_athletes tpfa
                 JOIN athletes ath ON tpfa.athlete_id = ath.athlete_id
-                JOIN day_workout dy ON tpfa.day_workout_id = dy.day_workout_id
+                JOIN day_workout_athletes dy ON tpfa.day_workout_id = dy.day_workout_id
                 JOIN muscles m ON tpfa.muscl_id = m.muscl_id
                 JOIN sports_exercises se on se.exercise_id = tpfa.exercise_id
                 WHERE ath.call_initial = %s and dy.day_workout_en = %s and m.muscl = %s
@@ -384,5 +384,100 @@ class DatabaseManager:
                 await cursor.execute(sql_command, (training_call,))
                 data = await cursor.fetchall()
                 return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def check_if_the_user_has_any_training(self, tg_id: int):
+        """
+            Перевіляє чи є вже тренування у користувача 0/1...n
+        """
+        try:
+            sql_command = """
+                SELECT count(uw.user_id) 
+                FROM user_workout uw
+                join users us on uw.user_id = us.user_id
+                where us.telegram_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (tg_id,))
+                data = await cursor.fetchone()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def my_workout_day(self) -> List[tuple]:
+        """
+            повертає день тренування та callback_data на день тренування
+            для функції create_my_workout
+        """
+        try:
+            sql_command = """
+                SELECT day_of_the_week, day_of_the_week_call 
+                FROM fitnesdb.workout_day
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command)
+                data = await cursor.fetchall()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def my_sports_exercises_in_training(self, muscle_id: int) -> List[tuple]:
+        try:
+            sql_command = """
+                SELECT exercise_photo, exercise
+                FROM sports_exercises
+                WHERE muscl_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (muscle_id,))
+                data = await cursor.fetchall()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def check_telegram_id(self, telegram_id: int) -> int:
+        try:
+            sql_command = """
+                SELECT user_id
+                FROM users
+                WHERE telegram_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = await cursor.fetchone()
+                data = int(data[0])
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def check_sporting_exercise_id(self, sporting_exercise: str) -> int:
+        try:
+            sql_command = """
+                SELECT exercise_id
+                FROM sports_exercises
+                WHERE exercise = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (sporting_exercise,))
+                data = await cursor.fetchone()
+                data = int(data[0])
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def add_an_exercise_to_my_workout_routine(self,
+                                                    user_id: int,
+                                                    workout_day: int,
+                                                    muscle_group: int,
+                                                    sporting_exercise_id: int) -> None:
+        try:
+            sql_command = """
+                INSERT INTO user_workout (workout_day_id, exercise_id, muscl_id, user_id)
+                VALUES (%s, %s, %s, %s)
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (workout_day, sporting_exercise_id, muscle_group, user_id))
+                await self.__mydb.commit()
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
