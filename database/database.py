@@ -481,3 +481,17 @@ class DatabaseManager:
                 await self.__mydb.commit()
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
+
+    async def delete_user_workout(self, telegram_id):
+        try:
+            sql_command = """
+                DELETE us
+                FROM user_workout us
+                JOIN users u ON us.user_id = u.user_id
+                WHERE u.telegram_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                await self.__mydb.commit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")

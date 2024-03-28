@@ -41,12 +41,11 @@ class TrainingFromAthletes(BasicInitialisation):
         await state.update_data(sportsman_name=call.data)
         d = await state.get_data()
         print(f"d: {d}")
-        await state.set_state(ADG.workout_day)
+        await state.set_state(ADG.workout_day_athletes)
         print(call.data)
         # await state.clear()
         res = await self.db_manager.workout_day(d.get('sportsman_name'))
         print(res)
-        await state.set_state(ADG.workout_day)
         await call.message.edit_text(f'Виберай день тренування',
                                      reply_markup=fabrics.inline_builder_sql(res, sizes=1,
                                                                              add_cb='training_from_athletes'))
@@ -62,10 +61,10 @@ class TrainingFromAthletes(BasicInitialisation):
         # print(call.data)
         # workout_day.workout_day = call.data  # Змінюємо атрибут конкретного користувача
         # res = await self.db_manager.muscle_class(athlete.sportsman_name, call.data)
-        await state.update_data(workout_day=call.data)
+        await state.update_data(workout_day_athletes=call.data)
         d = await state.get_data()
         print(f"d: {d}")
-        await state.set_state(ADG.muscle_group)
+        await state.set_state(ADG.muscle_group_athletes)
         res = await self.db_manager.muscle_class(d.get('sportsman_name'), d.get('workout_day'))
         await call.message.edit_text(f"Вибери групу м'язів",
                                      reply_markup=fabrics.build_inline_keyboard(res, add_cb='training_from_athletes'))
@@ -85,7 +84,7 @@ class TrainingFromAthletes(BasicInitialisation):
         # muscle_group.muscle_group = func.CALL_MUSCLE_GROUP_IN_TRAINER[call.data]
         # result_from_sql = await self.db_manager.workout_exercises(athlete.sportsman_name, workout_day.workout_day,
         #                                                    muscle_group.muscle_group)
-        await state.update_data(muscle_group=func.CALL_MUSCLE_GROUP_IN_TRAINER[call.data])
+        await state.update_data(muscle_group_athletes=func.CALL_MUSCLE_GROUP_IN_TRAINER[call.data])
         d = await state.get_data()
         print(f"d: {d}")
         result_from_sql = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day'),
@@ -132,10 +131,10 @@ class TrainingFromAthletes(BasicInitialisation):
         self.dp.callback_query.register(self.cmd_workout_day_athlete,
                                         F.data.in_(["mondaytothursday", "tuesdayandriday", "wednesdayandsaturday",
                                                     "mondayandfriday", "tuesday", "wednesday", "thursday", "saturday"]),
-                                        ADG.workout_day)
+                                        ADG.workout_day_athletes)
         self.dp.callback_query.register(self.cmd_muscle_group, F.data.in_(
             ["hrydy", "bitseps", "spyna", "pres", "plechy", "trytseps", "peredplichchya", "nohy", "ikry"]),
-                                        ADG.muscle_group)
+                                        ADG.muscle_group_athletes)
         self.dp.callback_query.register(self.paginator_muscle_workout,
                                         fabrics.Paginationmuscleatlets.filter(F.action.in_(['preliminary_ma',
                                                                                             'next_ma'])))
