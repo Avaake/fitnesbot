@@ -16,8 +16,8 @@ class FoodCounting(StatesGroup):
 
 class ADG(StatesGroup):
     sportsman_name = State()
-    workout_day = State()
-    muscle_group = State()
+    workout_day_athletes = State()
+    muscle_group_athletes = State()
 
 
 class MuscleIDs(StatesGroup):
@@ -33,6 +33,6 @@ class TrainingAtHomeCall(StatesGroup):
 
 
 class CreateMyWorkout(StatesGroup):
-    workout_day = State()
-    muscle_group = State()
-    sporting_exercise = State()
+    my_workout_day = State()
+    my_muscle_group = State()
+    my_sporting_exercise = State()

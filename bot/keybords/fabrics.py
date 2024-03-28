@@ -35,6 +35,7 @@ class PaginationMySportsExercisesInTraining(CallbackData, prefix="pagmysportsexe
     page: int
 
 
+
 def paginator(page: int = 0):
     builder = InlineKeyboardBuilder()
     builder.row(
@@ -91,14 +92,18 @@ def paginator_training_at_home(backwards: str, page: int = 0) -> InlineKeyboardM
 def pagination_my_sports_exercises_in_training_kb(page: int = 0) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.add(
+        InlineKeyboardButton(text="Додати до тренування", callback_data="add_to_your_workout")
+    )
+    builder.row(
         InlineKeyboardButton(text='⬅',
                              callback_data=PaginationMySportsExercisesInTraining(action="preliminary_mseit",
                                                                                  page=page).pack()),
-        InlineKeyboardButton(text="Додати до тренування", callback_data="add_to_your_workout"),
+        InlineKeyboardButton(text="Вибір іншого", callback_data="create_training"),
         InlineKeyboardButton(text='➡',
                              callback_data=PaginationMySportsExercisesInTraining(action="next_mseit",
                                                                                  page=page).pack())
     )
+    builder.row(InlineKeyboardButton(text="Кабінет користувача", callback_data="my_account"))
     return builder.as_markup()
 
 
