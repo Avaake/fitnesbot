@@ -21,13 +21,13 @@ class DatabaseManager:
 
     _instance = None
 
-    # def __new__(cls, *args, **kwargs):
-    #     if cls._instance is None:
-    #         cls._instance = super(DatabaseManager, cls).__new__(cls, *args, **kwargs)
-    #     return cls._instance
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(DatabaseManager, cls).__new__(cls, *args, **kwargs)
+        return cls._instance
 
-    # def __del__(self):
-    #     self._instance = None
+    def __del__(self):
+        self._instance = None
 
     def __init__(self):
         self.__host = settings.host
