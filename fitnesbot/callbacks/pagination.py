@@ -2,12 +2,12 @@ from aiogram import F, Dispatcher, Bot
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 from database.database import DatabaseManager
-from bot.keybords import fabrics
+from fitnesbot.keybords import fabrics
 from contextlib import suppress
 from aiogram.types import CallbackQuery
-from bot.utils import func
-from bot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils import func
+from fitnesbot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 muscle = func.MuscleID
 

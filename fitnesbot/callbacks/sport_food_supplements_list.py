@@ -4,10 +4,10 @@ from aiogram.filters import Command, CommandObject
 from aiogram.types import ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import Message, CallbackQuery
 from database.database import DatabaseManager
-from bot.keybords import fabrics, builders
-from bot.keybords.inline import menu
-from bot.utils.states import AdditiveNamesCall
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.keybords import fabrics, builders
+from fitnesbot.keybords.inline import menu
+from fitnesbot.utils.states import AdditiveNamesCall
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 
 class SupplementsMenu(BasicInitialisation):

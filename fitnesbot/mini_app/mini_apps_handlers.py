@@ -2,8 +2,8 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.filters import Command
 from aiogram.types import Message, WebAppData, CallbackQuery
 from database.database import DatabaseManager
-from bot.keybords import builders
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.keybords import builders
+from fitnesbot.utils.basemodel import BasicInitialisation
 import json
 from typing import List
 

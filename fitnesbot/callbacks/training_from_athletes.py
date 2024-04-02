@@ -1,13 +1,13 @@
 from aiogram import F, Bot, Dispatcher
 from aiogram.types import CallbackQuery
 from database.database import DatabaseManager
-from bot.keybords import fabrics, inline
-from bot.utils import func
+from fitnesbot.keybords import fabrics, inline
+from fitnesbot.utils import func
 from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
-from bot.utils.states import ADG
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.states import ADG
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 
 class TrainingFromAthletes(BasicInitialisation):

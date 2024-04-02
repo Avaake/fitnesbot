@@ -2,10 +2,10 @@ from aiogram import F, Dispatcher, Bot
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
-from bot.filters.is_admin import IsAdmin
-from bot.utils.states import ProductFPC
+from fitnesbot.filters.is_admin import IsAdmin
+from fitnesbot.utils.states import ProductFPC
 from database.database import DatabaseManager
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 def isfloat(value):
     try:

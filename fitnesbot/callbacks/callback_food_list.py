@@ -1,9 +1,9 @@
 from aiogram import F, Bot, Dispatcher
 from aiogram.types import CallbackQuery
 from database.database import DatabaseManager
-from bot.keybords import fabrics, inline
-from bot.utils.func import CALL_FOOD_DICT
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.keybords import fabrics, inline
+from fitnesbot.utils.func import CALL_FOOD_DICT
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 
 class CallbackFoodList(BasicInitialisation):

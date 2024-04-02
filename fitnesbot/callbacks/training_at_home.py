@@ -1,11 +1,11 @@
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisation
 from aiogram import Bot, Dispatcher, F
 from database.database import DatabaseManager
 from aiogram.types import CallbackQuery
-from bot.keybords import inline
+from fitnesbot.keybords import inline
 from aiogram.fsm.context import FSMContext
-from bot.utils.states import TrainingAtHomeCall
-from bot.keybords import fabrics
+from fitnesbot.utils.states import TrainingAtHomeCall
+from fitnesbot.keybords import fabrics
 
 
 class TrainingAtHome(BasicInitialisation):

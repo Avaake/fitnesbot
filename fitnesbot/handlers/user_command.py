@@ -3,10 +3,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command, CommandObject
 from aiogram.types import ReplyKeyboardRemove, Message, CallbackQuery
 from database.database import DatabaseManager
-from bot.keybords import fabrics, builders
-from bot.keybords.inline import menu
-from bot.utils.func import isfloat
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.keybords import fabrics, builders
+from fitnesbot.keybords.inline import menu
+from fitnesbot.utils.func import isfloat
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 
 class User(BasicInitialisation):
@@ -20,11 +20,10 @@ class User(BasicInitialisation):
     async def cmd_start(self, message: Message):
         """Обробник команди start"""
         await message.answer(f'Hello {message.from_user.first_name}', reply_markup=menu)
-        # await self.bot.send_message(chat_id=message.chat.id, text=f'Hello {message.from_user.first_name}', reply_markup=menu)
-        # await self.bot.send_voice(chat_id=message.chat.id, voice="AwACAgIAAxkBAAIao2WudJlIWs5L_rZk9EsbI0nRTjzZAALFQgACwGlwSVO3R24DabGRNAQ")
 
-    async def call_cmd_start(self, call: CallbackQuery):
+    async def call_cmd_start(self, call: CallbackQuery, state: FSMContext):
         """Обробник команди start"""
+        await state.clear()
         await call.message.edit_text(f'Hello {call.message.from_user.first_name}', reply_markup=menu)
 
     # async def fr1(self, message: Message):

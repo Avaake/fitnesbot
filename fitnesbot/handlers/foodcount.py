@@ -1,10 +1,10 @@
 from aiogram import F, Dispatcher, Bot
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
-from bot.utils.states import FoodCounting
+from fitnesbot.utils.states import FoodCounting
 from database.database import DatabaseManager
-from bot.keybords.builders import meals_kb
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.keybords.builders import meals_kb
+from fitnesbot.utils.basemodel import BasicInitialisation
 
 
 class AddFood(BasicInitialisation):

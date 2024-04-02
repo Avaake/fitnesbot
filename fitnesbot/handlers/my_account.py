@@ -1,13 +1,13 @@
 from aiogram.fsm.context import FSMContext
 
-from bot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisation
 from aiogram import Bot, Dispatcher, F
 from database.database import DatabaseManager
 from aiogram.types import CallbackQuery
-from bot.keybords.inline import my_account_menu, playlists_menu
-from bot.keybords.fabrics import inline_builder_sql, pagination_my_sports_exercises_in_training_kb
-from bot.utils.states import CreateMyWorkout
-from bot.utils.func import MY_WORKOUT_DAY, CALL_MUSCLE_GROUP
+from fitnesbot.keybords.inline import my_account_menu, playlists_menu
+from fitnesbot.keybords.fabrics import inline_builder_sql, pagination_my_sports_exercises_in_training_kb
+from fitnesbot.utils.states import CreateMyWorkout
+from fitnesbot.utils.func import MY_WORKOUT_DAY, CALL_MUSCLE_GROUP
 
 
 class MyAccount(BasicInitialisation):
@@ -62,7 +62,6 @@ class MyAccount(BasicInitialisation):
         print(f"create_my_workout_load_workout_day {data}")
         await call.message.edit_text(text="Обирай м'язову групу",
                                      reply_markup=inline_builder_sql(response, sizes=3, add_cb="my_account"))
-
 
     async def create_my_workout_load_muscle_group(self, call: CallbackQuery, state: FSMContext):
         """

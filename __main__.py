@@ -1,18 +1,18 @@
 import asyncio
 import logging
 from aiogram import Dispatcher, Bot
-from bot.handlers import user_command, products, foodcount, my_account
+from fitnesbot.handlers import user_command, products, foodcount, my_account
 from database.database import DatabaseManager
-from bot.callbacks import (pagination, callback_food_list, spotting_exercises_call, sport_food_supplements_list,
-                           training_from_athletes, training_at_home)
-from bot.mini_app import mini_apps_handlers
+from fitnesbot.callbacks import (pagination, callback_food_list, spotting_exercises_call, sport_food_supplements_list,
+                                 training_from_athletes, training_at_home)
+from fitnesbot.mini_app import mini_apps_handlers
 from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 from aioredis import Redis
 from config import settings
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-from bot.middlewares.register_check import RegisterCheckMiddleware
+from fitnesbot.middlewares.register_check import RegisterCheckMiddleware
 
 # redis = Redis()
 storage = MemoryStorage()

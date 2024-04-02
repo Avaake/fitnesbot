@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.filters.callback_data import CallbackData
-from bot.utils.func import f
+from fitnesbot.utils.func import f
 from typing import List
 
 
