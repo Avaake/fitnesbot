@@ -65,7 +65,7 @@ class TrainingFromAthletes(BasicInitialisation):
         d = await state.get_data()
         print(f"d: {d}")
         await state.set_state(ADG.muscle_group_athletes)
-        res = await self.db_manager.muscle_class(d.get('sportsman_name'), d.get('workout_day'))
+        res = await self.db_manager.muscle_class(d.get('sportsman_name'), d.get('workout_day_athletes'))
         await call.message.edit_text(f"Вибери групу м'язів",
                                      reply_markup=fabrics.build_inline_keyboard(res, add_cb='training_from_athletes'))
         await call.answer()
@@ -87,8 +87,8 @@ class TrainingFromAthletes(BasicInitialisation):
         await state.update_data(muscle_group_athletes=func.CALL_MUSCLE_GROUP_IN_TRAINER[call.data])
         d = await state.get_data()
         print(f"d: {d}")
-        result_from_sql = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day'),
-                                                                  d.get('muscle_group'))
+        result_from_sql = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day_athletes'),
+                                                                  d.get('muscle_group_athletes'))
         print(result_from_sql)
         await call.message.edit_text(f'Назва вправи<a href="{result_from_sql[0][0]}">:</a> {result_from_sql[0][1]}\n'
                                      f'Підходи: {result_from_sql[0][2]}\n'
@@ -109,8 +109,8 @@ class TrainingFromAthletes(BasicInitialisation):
         #                                                    muscle_group.muscle_group)
         d = await state.get_data()
         print(f"d: {d}")
-        exercise = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day'),
-                                                           d.get('muscle_group'))
+        exercise = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day_athletes'),
+                                                           d.get('muscle_group_athletes'))
         print(exercise)
         page_num = int(callback_data.page)
         page = page_num - 1 if page_num > 0 else 0

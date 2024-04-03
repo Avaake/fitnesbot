@@ -15,6 +15,7 @@ class DBSettings(BaseSettings):
 
 class Settings(DBSettings):
     token: str = getenv("BOT_TOKEN")
+    webhook_url: str = getenv("WEBHOOK_URL")
     db: DBSettings = DBSettings()
 
 

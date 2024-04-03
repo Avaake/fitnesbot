@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, WebAppInfo, ReplyKeyboardRemove
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
-
+from config import settings
 
 def f(text: int | list):
     builder = ReplyKeyboardBuilder()
@@ -77,7 +77,7 @@ muscles = ReplyKeyboardMarkup(
 webAppKeyboard = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text="🧮 Калькулятор калорій та БЖВ", web_app=WebAppInfo(url="https://avaake.github.io/"))
+            KeyboardButton(text="🧮 Калькулятор калорій та БЖВ", web_app=WebAppInfo(url=f"{settings.webhook_url}/calcbzy"))
         ]
     ],
     resize_keyboard=True,

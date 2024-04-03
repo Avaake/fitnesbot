@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #f0cb51;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: url(solid-concrete-wall-textured-backdrop_53876-129493.avif);
+    overflow: hidden; /* auto/hidden */
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    font-size: 23px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+input, select {
+    border-radius: 20px;
+    width: 330px;
+    padding: 15px;
+    display: block;
+    margin-bottom: 10px;
+    color: #f0cb51;
+    background-color: rgba(84, 117, 7, 0.1);
+    border: none;
+}
+
+input::placeholder {
+    color: #fce28c;
+    opacity: 70%;
+}
+
+input:focus {
+    outline: none;
+}
+
+input:hover {
+    box-shadow: 0px 5px 10px 0px #ffeba7;
+}
+
+select:hover {
+    box-shadow: 0px 5px 10px 0px #ffeba7;
+}
+
+
+select {
+    color: #fce28c;
+}
+
+option {
+    background-color: #383636;
+}
+
+button {
+    margin-top: 7px;
+    width: 330px;
+    height: 40px;
+    border-radius: 20px;
+    background: rgba(84, 117, 7, 0.1);
+    color: #fce28c;
+    border: none;
+}
+
+button:hover {
+    background: rgba(7, 140, 11, 0.537);
+    box-shadow: 0 0 30px 5px rgba(0, 255, 8, 0.815);
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+
+}
