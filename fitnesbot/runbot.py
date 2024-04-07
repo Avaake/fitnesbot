@@ -1,7 +1,6 @@
-from typing import AsyncGenerator
-
 from aiogram import Dispatcher, Bot
 from fastapi import FastAPI
+from fastapi.applications import AppType
 
 from fitnesbot.handlers import user_command, products, foodcount, my_account
 from database.database import DatabaseManager
@@ -43,7 +42,7 @@ class RunBot:
         self.training_at_home = training_at_home.TrainingAtHome(bot=self.bot, dp=self.dp, db_manager=self.db_manager)
         self.my_account = my_account.MyAccount(bot=self.bot, dp=self.dp, db_manager=self.db_manager)
 
-    async def lifespan(self, app: FastAPI) -> AsyncGenerator:
+    async def lifespan(self, app: FastAPI) -> AppType:
         try:
             await self.bot.set_webhook(url=f"{settings.webhook_url}/webhook",
                                        allowed_updates=self.dp.resolve_used_update_types(),
@@ -65,6 +64,5 @@ class RunBot:
             # self.dp.callback_query.middleware(RegisterCheckMiddleware(self.db_manager))
             yield
             await self.bot.delete_webhook(drop_pending_updates=True)
-            # await self.dp.start_polling(self.bot)
         finally:
             await self.db_manager.disconnect_db()

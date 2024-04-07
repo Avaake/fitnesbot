@@ -1,6 +1,5 @@
 from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command
-from aiogram.types import Message, WebAppData, CallbackQuery
+from aiogram.types import WebAppData, CallbackQuery
 from database.database import DatabaseManager
 from fitnesbot.keybords import builders
 from fitnesbot.utils.basemodel import BasicInitialisation
@@ -16,7 +15,7 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
         await call.message.answer(
             text="Це калькулятор поживних речовин (КБЖВ) який "
                  "порахує потрібну тобі норму калорій для твого способу життя. <b>Тицяй на кнопку</b>",
-            reply_markup=builders.webAppKeyboard)
+            reply_markup=builders.web_keyboard_builder(txt="🧮 Калькулятор калорій та БЖВ", webapp="/users/calcbzy"))
         await call.answer()
 
     @classmethod
@@ -67,7 +66,22 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
                                     f"\n\t<b>Вуглеводи: {res[-1]}</b> грамів.",
                                     reply_markup=builders.cancel_kb)
 
+    async def selection_of_diseases(self, call: CallbackQuery) -> None:
+        await call.message.answer(text="Нажимай на кнопку та вибери всі захваорювання які в тебе є",
+                                  reply_markup=builders.web_keyboard_builder(txt="Вибір присутніх захворювань",
+                                                                             webapp="/users/disease"))
+
+    async def selection_of_diseases_web_handler(self, web_mess_data: WebAppData) -> None:
+        data = json.loads(web_mess_data.web_app_data.data)
+        print(data)
+        await self.bot.send_message(web_mess_data.chat.id,
+                                    f'Захворювання: {data.get("hernia")}',
+                                    reply_markup=builders.cancel_kb)
+
     def run(self) -> None:
         self.dp.callback_query.register(self.nutrient_calculator_handler, F.data == "nutrientcalculator")
+        self.dp.callback_query.register(self.selection_of_diseases, F.data == "selectiondiseases")
         self.dp.message.register(self.nutrient_calculator_web_handler,
                                  F.web_app_data.button_text == "🧮 Калькулятор калорій та БЖВ")
+        self.dp.message.register(self.selection_of_diseases_web_handler,
+                                 F.web_app_data.button_text == "Вибір присутніх захворювань")

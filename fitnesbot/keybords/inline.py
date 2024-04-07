@@ -117,6 +117,9 @@ my_account_menu = InlineKeyboardMarkup(
             InlineKeyboardButton(text='Розрахуй дену калорійність', callback_data='nutrientcalculator'),
         ],
         [
+            InlineKeyboardButton(text='Вибіри своЇ захворювання', callback_data='selectiondiseases'),
+        ],
+        [
             InlineKeyboardButton(text='Мої тренування', callback_data='my_account_workout'),
             InlineKeyboardButton(text='Плей листи', callback_data='Playlists'),
         ],

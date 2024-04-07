@@ -16,14 +16,14 @@
             <input type="text" placeholder="Вага" id="weight" autocomplete="off">
             <input type="text" placeholder="Зріст в см" id="growth" autocomplete="off">
 
-            <label for="gender__label">Стать:</label>
+            <label for="gender">Стать:</label>
             <select id="gender">
                 <option value="">Виберіть стать</option>
                 <option value="male">Чоловік</option>
                 <option value="female">Жінка</option>
             </select>
 
-            <label for="activity-level__lab">Рівень активності:</label>
+            <label for="activity-level">Рівень активності:</label>
             <select id="activity-level" name="activity-level">
                 <option value="">Виберіть рівень активності</option>
                 <option value="sedentary">сидячий спосіб життя (без фізичних навантажень)</option>
@@ -33,7 +33,7 @@
                 <option value="extra">екстра активність (фіз. праця + щоденні фіз. навантаження, проф. спортсмени)</option>
             </select>
 
-            <label for="goal__lab">Мета:</label>
+            <label for="goal">Мета:</label>
             <select id="goal" name="goal">
                 <option value="maintenance">Підтримання форми</option>
                 <option value="weight_loss">Схуднення</option>
@@ -45,7 +45,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
-        const defailtURL = "https://b167-213-109-232-151.ngrok-free.app";
         tg.expand();
         let finish_from = document.getElementById("finish__from");
 

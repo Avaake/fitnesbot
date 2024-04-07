@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style_disease.css">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container-center">
+        <h1>Захворювання</h1>
+        <h3>Виберіть всі захварювання які у вас є</h3>
+        <div class="container-button">
+            <button class="button-containers" id="button1" onclick="changeText(this)">Грижа</button>
+            <button class="button-containers" id="button2" onclick="changeText(this)">Протрузія</button>
+
+        </div>
+        <div class="container-button">
+            <button class="button-containers" id="button3" onclick="changeText(this)">Скаліоз</button>
+            <button class="button-containers" id="button4" onclick="changeText(this)">Артрит</button>
+        </div>
+        <button id="finish__from" class="finish__from">Завершити</button>
+    </div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        function changeText(button) {
+            let buttonText = button.textContent; // Отримуємо текст кнопки
+            if (!buttonText.includes(" Додано")) { // Перевіряємо, чи текст не містить " Додано"
+                buttonText += " Додано"; // Додаємо " Додано" до тексту кнопки
+                button.style.backgroundColor = "rgba(7, 140, 11, 0.537)"; // Змінюємо фоновий колір
+                button.style.boxShadow = "0 0 10px 5px rgba(0, 255, 8, 0.815)"; // Змінюємо тінь
+            } else {
+                buttonText = buttonText.substring(0, buttonText.indexOf(" Додано")); // Видаляємо " Додано"
+                button.style.backgroundColor = "rgba(84, 117, 7, 0.1)"; // Змінюємо фоновий колір
+                button.style.boxShadow = "none"; // Змінюємо тінь
+            }
+            button.textContent = buttonText; // Встановлюємо новий текст кнопки
+            console.log(buttonText)
+        }
+
+        let finish_from = document.getElementById("finish__from");
+
+
+        finish_from.addEventListener("click", () => {
+            let data = {}; // Створюємо порожній об'єкт для зберігання даних
+            let herniaButton = document.getElementById("button1").textContent.trim(); // Отримуємо текст кнопки "Грижа" та видаляємо зайві пробіли
+            let protrusionButton = document.getElementById("button2").textContent.trim();
+            let scoliosisButton = document.getElementById("button3").textContent.trim();
+            let arthritisButton = document.getElementById("button4").textContent.trim();
+
+            // Перевіряємо, чи кнопка містить " Додано"
+            if (herniaButton.includes(" Додано")) {
+                data["hernia"] = herniaButton.substring(0, herniaButton.indexOf(" Додано"));
+            }
+            if (protrusionButton.includes(" Додано")) {
+                data["protrusion"] = protrusionButton.substring(0, protrusionButton.indexOf(" Додано"))
+            }
+            if (scoliosisButton.includes(" Додано")) {
+                data["scoliosis"] = scoliosisButton.substring(0, scoliosisButton.indexOf(" Додано"))
+            }
+            if (arthritisButton.includes(" Додано")) {
+                data["arthritis"] = arthritisButton.substring(0, arthritisButton.indexOf(" Додано"))
+            }
+
+            tg.sendData(JSON.stringify(data)); // Відправляємо дані у форматі JSON
+            tg.close();
+        });
+    </script>
+</body>
+</html>
