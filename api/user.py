@@ -1,9 +1,9 @@
-from fastapi import Request, APIRouter, HTTPException
+from fastapi import Request, APIRouter
 from fastapi.templating import Jinja2Templates
 
 
 templates = Jinja2Templates(directory="web/templates")
-router = APIRouter(prefix="/users")
+router = APIRouter(prefix="/users", tags=["User"])
 
 
 @router.get("/calcbzy")

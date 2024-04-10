@@ -4,8 +4,9 @@ from fastapi.applications import AppType
 
 from fitnesbot.handlers import user_command, products, foodcount, my_account
 from database.database import DatabaseManager
-from fitnesbot.callbacks import (pagination, callback_food_list, spotting_exercises_call, sport_food_supplements_list,
-                                 training_from_athletes, training_at_home)
+from fitnesbot.callback_handlers import (pagination, callback_food_list, spotting_exercises_call,
+                                         sport_food_supplements_list,
+                                         training_from_athletes, training_at_home)
 from fitnesbot.mini_app import mini_apps_handlers
 from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.fsm.storage.memory import MemoryStorage
