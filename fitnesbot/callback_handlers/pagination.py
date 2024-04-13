@@ -103,19 +103,30 @@ class Pagin(BasicInitialisation):
                                                          state: FSMContext):
         await state.set_state(CreateMyWorkout.my_sporting_exercise)
         data = await state.get_data()
-        print(data)
-        response = await self.db_manager.my_sports_exercises_in_training(data.get('my_muscle_group'))
-        page_num = int(callback_data.page)
+        recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
+        if recommendation_response == 1:
+            response = await self.db_manager.exercises_that_are_not_recommended_for_the_disease(call.from_user.id)
+            exercise_id_list = [j for i in response for j in i]
+            response_sports_exercises = await self.db_manager.my_sports_exercises_in_training(
+                muscle_id=data.get('my_muscle_group'),
+                exercise_ids=exercise_id_list)
+        else:
+            response_sports_exercises = await self.db_manager.my_sports_exercises_in_training(
+                muscle_id=data.get('my_muscle_group'),
+                exercise_ids=0)
 
+        page_num = int(callback_data.page)
         page = page_num - 1 if page_num > 0 else 0
 
         if callback_data.action == "next_mseit":
-            page = page_num + 1 if page_num < (len(response) - 1) else page_num
+            page = page_num + 1 if page_num < (len(response_sports_exercises) - 1) else page_num
 
-        await state.update_data(my_sporting_exercise=response[page][1])
+        await state.update_data(my_sporting_exercise=response_sports_exercises[page][1])
         with suppress(TelegramBadRequest):
-            await call.message.edit_text(text=f'<b>Назва<a href="{response[page][0]}">:</a></b> {response[page][1]}',
-                                         reply_markup=fabrics.pagination_my_sports_exercises_in_training_kb(page=page))
+            await call.message.edit_text(
+                text=f'<b>Назва<a href="{response_sports_exercises[page][0]}">:</a></b> '
+                     f'{response_sports_exercises[page][1]}',
+                reply_markup=fabrics.pagination_my_sports_exercises_in_training_kb(page=page))
 
     def run(self):
         self.dp.callback_query.register(self.paginator_my_workout,

@@ -24,3 +24,5 @@ WHERE ath.call_initial = 'ar1';
 SELECT exercise_photo, exercise
 FROM sports_exercises
 WHERE muscl_id = 1;
+
+SELECT playlist_name, playlist_link FROM music_playlists;

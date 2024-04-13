@@ -30,4 +30,4 @@ async def test_my_training_account(bot, dispatcher, db_manager, memory_storage):
                                                    "але тренування може біти лише одне на акаунт, "
                                                    "щоб створити інше потрібно спочатку видалити існуюче",
                                               reply_markup=inline_builder_sql(button_list, sizes=1,
-                                                                              add_cb="my_account"))
+                                                                              back_cb="my_account"))

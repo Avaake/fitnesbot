@@ -4,7 +4,8 @@ from database.database import DatabaseManager
 from fitnesbot.keybords import builders
 from fitnesbot.utils.basemodel import BasicInitialisation
 import json
-from typing import List
+from typing import List, TYPE_CHECKING
+from aiogram.fsm.context import FSMContext
 
 
 class TelegramMiniAppsHandlers(BasicInitialisation):
@@ -74,9 +75,21 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
     async def selection_of_diseases_web_handler(self, web_mess_data: WebAppData) -> None:
         data = json.loads(web_mess_data.web_app_data.data)
         print(data)
+        await self.db_manager.update_uses_disease(disease_list=data, telegram_id=web_mess_data.chat.id)
         await self.bot.send_message(web_mess_data.chat.id,
                                     f'Захворювання: {data.get("hernia")}',
                                     reply_markup=builders.cancel_kb)
+
+    async def selection_of_diseases_web_handler_in_create_workout(self,
+                                                                  web_mess_data: WebAppData,
+                                                                  state: FSMContext) -> None:
+        data = json.loads(web_mess_data.web_app_data.data)
+        from fitnesbot import start_bot
+        await self.db_manager.update_uses_disease(disease_list=data, telegram_id=web_mess_data.chat.id)
+        await self.bot.send_message(web_mess_data.chat.id,
+                                    'Дякуємо',
+                                    reply_markup=builders.cancel_kb)
+        await start_bot.my_account.create_my_workout(call=web_mess_data, state=state)
 
     def run(self) -> None:
         self.dp.callback_query.register(self.nutrient_calculator_handler, F.data == "nutrientcalculator")
@@ -85,3 +98,5 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
                                  F.web_app_data.button_text == "🧮 Калькулятор калорій та БЖВ")
         self.dp.message.register(self.selection_of_diseases_web_handler,
                                  F.web_app_data.button_text == "Вибір присутніх захворювань")
+        self.dp.message.register(self.selection_of_diseases_web_handler_in_create_workout,
+                                 F.web_app_data.button_text == "Спочатку вебери свої захворювання")

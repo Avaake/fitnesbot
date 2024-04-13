@@ -1,4 +1,5 @@
 import asyncio
+import json
 import logging
 
 from typing import List
@@ -52,6 +53,7 @@ class DatabaseManager:
                 print('Database connected!')
             except aiomysql.Error as exc:
                 logging.critical(f"{exc}")
+                raise
 
     async def disconnect_db(self):
         """виконує дісконект """
@@ -422,12 +424,16 @@ class DatabaseManager:
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
-    async def my_sports_exercises_in_training(self, muscle_id: int) -> List[tuple]:
+    async def my_sports_exercises_in_training(self,
+                                              muscle_id: int,
+                                              exercise_ids: List[int] | int) -> List[tuple]:
         try:
-            sql_command = """
+            if exercise_ids != 0:
+                exercise_ids = ','.join(map(str, exercise_ids))
+            sql_command = f"""
                 SELECT exercise_photo, exercise
                 FROM sports_exercises
-                WHERE muscl_id = %s
+                WHERE muscl_id = %s AND exercise_id NOT IN ({exercise_ids})
             """
             async with self.__mydb.cursor() as cursor:
                 await cursor.execute(sql_command, (muscle_id,))
@@ -493,5 +499,85 @@ class DatabaseManager:
             async with self.__mydb.cursor() as cursor:
                 await cursor.execute(sql_command, (telegram_id,))
                 await self.__mydb.commit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def check_uses_disease(self, telegram_id: int) -> int:
+        try:
+            sal_command = """SELECT COUNT(user_diseases_id) FROM user_diseases WHERE telegram_id = %s"""
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sal_command, (telegram_id,))
+                data = await cursor.fetchall()
+                data = int(data[0][0])
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def update_uses_disease(self, telegram_id: int, disease_list: dict) -> None:
+        try:
+            disease_list_json = json.dumps(disease_list)
+            if await self.check_uses_disease(telegram_id) == 0:
+                sql_command = """INSERT INTO user_diseases (disease_list, telegram_id) VALUES (%s, %s)"""
+                async with self.__mydb.cursor() as cursor:
+                    await cursor.execute(sql_command, (disease_list_json, telegram_id))
+                    await self.__mydb.commit()
+            else:
+                sql_command = """UPDATE user_diseases SET disease_list = %s WHERE telegram_id = %s"""
+                async with self.__mydb.cursor() as cursor:
+                    await cursor.execute(sql_command, (disease_list_json, telegram_id))
+                    await self.__mydb.commit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def view_the_index_of_recommendations(self, telegram_id: int) -> int:
+        try:
+            sql_command = """SELECT recommendations FROM user_diseases WHERE telegram_id = %s"""
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = await cursor.fetchall()
+                data = int(data[0][0])
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def update_the_recommendation_index(self, rec_index: int, telegram_id: int) -> None:
+        try:
+            sql_command = """UPDATE user_diseases SET recommendations = %s WHERE telegram_id = %s"""
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (rec_index, telegram_id))
+                await self.__mydb.commit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def music_playlists(self) -> List[tuple]:
+        try:
+            sql_command = """SELECT playlist_name, playlist_link FROM music_playlists"""
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command)
+                data = await cursor.fetchall()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def exercises_that_are_not_recommended_for_the_disease(self, telegram_id: int) -> List[tuple]:
+        try:
+            user_disease_json: dict
+            sql_command = """SELECT disease_list FROM user_diseases WHERE telegram_id = %s"""
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = await cursor.fetchone()
+                user_disease_json = json.loads(data[0])
+
+            async with self.__mydb.cursor() as cursor:
+                placeholders = ','.join(['%s' for _ in user_disease_json.values()])
+                sql_command = f"""
+                    SELECT DISTINCT cedd.exercise_id
+                    FROM fitnesdb.contraindications_exercise_due_diseases cedd
+                    JOIN fitnesdb.disease d ON cedd.disease_id = d.disease_id
+                    WHERE d.disease_name IN ({placeholders});
+                """
+                await cursor.execute(sql_command, list(user_disease_json.values()))
+                data = await cursor.fetchall()
+                return data
         except aiomysql.Error as exc:
             logging.error(f"{exc}")

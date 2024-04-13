@@ -153,9 +153,11 @@ def build_inline_keyboard(buttons: list, add_cb: str = None):
 
 def inline_builder_sql(buttons: List[tuple],
                        sizes: int | List[int] = 2,
-                       add_txt: str = "Назад",
-                       add_cb: str = None,
-                       call_url: str = None) -> InlineKeyboardMarkup:
+                       back_txt: str = "Назад",
+                       back_cb: str = None,
+                       call_url: str = None,
+                       add_text: str = None,
+                       add_cb: str = None) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     for text, callback_data in buttons:
@@ -165,7 +167,9 @@ def inline_builder_sql(buttons: List[tuple],
     if call_url is not None:
         builder.row(InlineKeyboardButton(text="Купуйте перевірене", url=call_url))
     if add_cb is not None:
-        builder.row(InlineKeyboardButton(text=add_txt, callback_data=add_cb))
+        builder.row(InlineKeyboardButton(text=add_text, callback_data=add_cb))
+    if back_cb is not None:
+        builder.row(InlineKeyboardButton(text=back_txt, callback_data=back_cb))
     return builder.as_markup()
 
 
@@ -174,4 +178,14 @@ def inline_back_button(title: str, callback_title: str, call_url: str = None) ->
     if call_url is not None:
         builder.add(InlineKeyboardButton(text="Купуйте перевірене", url=call_url))
     builder.row(InlineKeyboardButton(text=title, callback_data=callback_title))
+    return builder.as_markup()
+
+
+def playlists_menu(buttons: list[tuple]) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    for text, link in buttons:
+        builder.button(text=text, url=link)
+
+    builder.adjust(2)
+    builder.row(InlineKeyboardButton(text="Назад", callback_data="my_account"))
     return builder.as_markup()

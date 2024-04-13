@@ -1,10 +1,10 @@
 from aiogram.types import Update
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fitnesbot.runbot import RunBot
+
+from fitnesbot import start_bot
 from .user import router as user_router
 
-start_bot = RunBot()
 app = FastAPI(lifespan=start_bot.lifespan)
 app.include_router(user_router)
 app.mount("/static", StaticFiles(directory="web/static"), name="static")

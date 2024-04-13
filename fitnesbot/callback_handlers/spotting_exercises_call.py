@@ -36,7 +36,7 @@ class SpottingExercises(BasicInitialisation):
         # print(res)
         await state.set_state(MuscleIDs.muscle_id)
         await call.message.edit_text(f"<b>Виберіть групу м'язів, для якої ви хочете переглянути вправи</b>",
-                                     reply_markup=fabrics.inline_builder_sql(res, sizes=3, add_cb='workouts'))
+                                     reply_markup=fabrics.inline_builder_sql(res, sizes=3, back_cb='workouts'))
         await call.answer()
 
     async def cmd_muscle_name(self, call: CallbackQuery, state: FSMContext):

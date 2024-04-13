@@ -23,7 +23,7 @@ class SupplementsMenu(BasicInitialisation):
         res = await self.db_manager.additives_inline()
         print(res)
         await call.message.edit_text(text='<b>Виберай</b>',
-                                     reply_markup=fabrics.inline_builder_sql(res, add_cb='start'))
+                                     reply_markup=fabrics.inline_builder_sql(res, back_cb='start'))
         await call.answer()
 
     async def additives_groups(self, call: CallbackQuery) -> None:
@@ -38,7 +38,7 @@ class SupplementsMenu(BasicInitialisation):
             result = [(i[0], i[1]) for i in res]
             await call.message.edit_text(text=res[0][2],
                                          reply_markup=fabrics.inline_builder_sql(result, sizes=3,
-                                                                                 add_cb="additives_call",
+                                                                                 back_cb="additives_call",
                                                                                  call_url=res[0][-1]))
         await call.answer()
 

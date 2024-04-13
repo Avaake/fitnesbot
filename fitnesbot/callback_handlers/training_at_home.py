@@ -27,7 +27,7 @@ class TrainingAtHome(BasicInitialisation):
         response = await self.db_manager.training_at_home_day(str(call.data))
         print(response)
         await call.message.answer(text=f"Привіт {call.from_user.first_name} обирай тренування для дому",
-                                  reply_markup=fabrics.inline_builder_sql(response, add_cb="training_at_home"))
+                                  reply_markup=fabrics.inline_builder_sql(response, back_cb="training_at_home"))
 
     async def cmd_training_at_home_title(self, call: CallbackQuery, state: FSMContext) -> None:
         """

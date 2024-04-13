@@ -48,7 +48,7 @@ class TrainingFromAthletes(BasicInitialisation):
         print(res)
         await call.message.edit_text(f'Виберай день тренування',
                                      reply_markup=fabrics.inline_builder_sql(res, sizes=1,
-                                                                             add_cb='training_from_athletes'))
+                                                                             back_cb='training_from_athletes'))
         await call.answer()
 
     async def cmd_workout_day_athlete(self, call: CallbackQuery, state: FSMContext):
