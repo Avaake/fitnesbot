@@ -373,7 +373,10 @@ class DatabaseManager:
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
-    async def training_at_home(self, training_call: str):
+    async def training_at_home(self, training_call: str) -> List[tuple]:
+        """
+            training_at_home повертає масиз в тренуваннями для дому
+        """
         try:
             sql_command = """
                 SELECT tah.description, se.link, se.exercise, tah.sets, 
@@ -427,6 +430,11 @@ class DatabaseManager:
     async def my_sports_exercises_in_training(self,
                                               muscle_id: int,
                                               exercise_ids: List[int] | int) -> List[tuple]:
+        """
+            my_sports_exercises_in_training повертає масив з спортивними вправами по
+            заданому muscle_id та exercise_ids - список id вправ які не рекомндуються робити при
+            вказаних захворюваннях користуача
+        """
         try:
             if exercise_ids != 0:
                 exercise_ids = ','.join(map(str, exercise_ids))
@@ -443,6 +451,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def check_telegram_id(self, telegram_id: int) -> int:
+        """
+            check_telegram_id певертає id телеграму користувача
+        """
         try:
             sql_command = """
                 SELECT user_id
@@ -458,6 +469,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def check_sporting_exercise_id(self, sporting_exercise: str) -> int:
+        """
+            check_sporting_exercise_id повертає id спортивної вправи
+        """
         try:
             sql_command = """
                 SELECT exercise_id
@@ -477,6 +491,13 @@ class DatabaseManager:
                                                     workout_day: int,
                                                     muscle_group: int,
                                                     sporting_exercise_id: int) -> None:
+        """
+            add_an_exercise_to_my_workout_routine додає тренуання до заданого пористувача
+        :param user_id:  id користувача
+        :param workout_day: id дня тижня
+        :param muscle_group: id м'язової групи
+        :param sporting_exercise_id: id спортивної вправи
+        """
         try:
             sql_command = """
                 INSERT INTO user_workout (workout_day_id, exercise_id, muscl_id, user_id)
@@ -489,6 +510,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def delete_user_workout(self, telegram_id):
+        """
+            delete_user_workout видаляє всі тренування у заданого користувача
+        """
         try:
             sql_command = """
                 DELETE us
@@ -503,6 +527,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def check_uses_disease(self, telegram_id: int) -> int:
+        """
+            check_uses_disease тримуємо кількість захворювань у заданого користувача (1/0)
+        """
         try:
             sal_command = """SELECT COUNT(user_diseases_id) FROM user_diseases WHERE telegram_id = %s"""
             async with self.__mydb.cursor() as cursor:
@@ -514,6 +541,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def update_uses_disease(self, telegram_id: int, disease_list: dict) -> None:
+        """
+            update_uses_disease додаємо або оновлує захворювання користувача зберігаємо у JSON
+        """
         try:
             disease_list_json = json.dumps(disease_list)
             if await self.check_uses_disease(telegram_id) == 0:
@@ -530,6 +560,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def view_the_index_of_recommendations(self, telegram_id: int) -> int:
+        """
+            view_the_index_of_recommendations отримуємо індекс рекомандації (1'on'/0'off')
+        """
         try:
             sql_command = """SELECT recommendations FROM user_diseases WHERE telegram_id = %s"""
             async with self.__mydb.cursor() as cursor:
@@ -541,6 +574,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def update_the_recommendation_index(self, rec_index: int, telegram_id: int) -> None:
+        """
+            update_the_recommendation_index оновлую індекс рекомендацій (1'on'/0'off')
+        """
         try:
             sql_command = """UPDATE user_diseases SET recommendations = %s WHERE telegram_id = %s"""
             async with self.__mydb.cursor() as cursor:
@@ -550,6 +586,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def music_playlists(self) -> List[tuple]:
+        """
+            music_playlists повертає назву плейліста та цого link
+        """
         try:
             sql_command = """SELECT playlist_name, playlist_link FROM music_playlists"""
             async with self.__mydb.cursor() as cursor:
@@ -560,6 +599,11 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def exercises_that_are_not_recommended_for_the_disease(self, telegram_id: int) -> List[tuple]:
+        """
+            exercises_that_are_not_recommended_for_the_disease повертає масив який містить id спортивний вправ.
+            Спочатку отримуэмо JSON якия мість всі захворювання користувача,далі отримуємо id всіх спортивний вправ
+            які противопоказіні по цйому захворюванню.
+        """
         try:
             user_disease_json: dict
             sql_command = """SELECT disease_list FROM user_diseases WHERE telegram_id = %s"""
@@ -574,9 +618,43 @@ class DatabaseManager:
                     SELECT DISTINCT cedd.exercise_id
                     FROM fitnesdb.contraindications_exercise_due_diseases cedd
                     JOIN fitnesdb.disease d ON cedd.disease_id = d.disease_id
-                    WHERE d.disease_name IN ({placeholders});
+                    WHERE d.disease_name IN ({placeholders})
                 """
                 await cursor.execute(sql_command, list(user_disease_json.values()))
+                data = await cursor.fetchall()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def my_training_program_training_day(self, telegram_id: int) -> List[tuple]:
+        try:
+            sql_command = """
+                SELECT wd.day_of_the_week, wd.day_of_the_week_call
+                FROM user_workout uw
+                JOIN workout_day wd ON uw.workout_day_id = wd.workout_day_id
+                JOIN users u ON uw.user_id = u.user_id
+                WHERE u.telegram_id = %s
+                GROUP BY wd.day_of_the_week, wd.day_of_the_week_call
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = await cursor.fetchall()
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def my_training_programme_sport_exercise(self, telegram_id: int, call_workout_day: str) -> List[tuple]:
+        try:
+            sql_command = """
+                SELECT se.link, se.exercise
+                FROM user_workout uw
+                JOIN workout_day wd ON uw.workout_day_id = wd.workout_day_id
+                JOIN users u ON uw.user_id = u.user_id
+                JOIN sports_exercises se ON uw.exercise_id = se.exercise_id 
+                WHERE u.telegram_id = %s and wd.day_of_the_week_call = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id, call_workout_day))
                 data = await cursor.fetchall()
                 return data
         except aiomysql.Error as exc:

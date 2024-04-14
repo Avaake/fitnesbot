@@ -6,7 +6,7 @@ from fitnesbot.keybords import fabrics
 from contextlib import suppress
 from aiogram.types import CallbackQuery
 from fitnesbot.utils import func
-from fitnesbot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout
+from fitnesbot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout, MyWorkoutProgrammeDay
 from fitnesbot.utils.basemodel import BasicInitialisation
 
 muscle = func.MuscleID
@@ -14,6 +14,7 @@ muscle = func.MuscleID
 
 class Pagin(BasicInitialisation):
     """Клас Pagin містить пагінації для інших команд """
+
     def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
         super().__init__(bot, dp, db_manager)
 
@@ -106,7 +107,10 @@ class Pagin(BasicInitialisation):
         recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
         if recommendation_response == 1:
             response = await self.db_manager.exercises_that_are_not_recommended_for_the_disease(call.from_user.id)
-            exercise_id_list = [j for i in response for j in i]
+            if response is not None:
+                exercise_id_list = [j for i in response for j in i]
+            else:
+                exercise_id_list = 0
             response_sports_exercises = await self.db_manager.my_sports_exercises_in_training(
                 muscle_id=data.get('my_muscle_group'),
                 exercise_ids=exercise_id_list)
@@ -128,6 +132,27 @@ class Pagin(BasicInitialisation):
                      f'{response_sports_exercises[page][1]}',
                 reply_markup=fabrics.pagination_my_sports_exercises_in_training_kb(page=page))
 
+    async def paginator_a_sporting_exercise_in_my_training_programme(self,
+                                                                     call: CallbackQuery,
+                                                                     callback_data:
+                                                                     fabrics.PaginationMyTrainingProgrammeSportExercise,
+                                                                     state: FSMContext):
+        await state.set_state(MyWorkoutProgrammeDay.my_training_programme_day)
+        data = await state.get_data()
+        response = await self.db_manager.my_training_programme_sport_exercise(
+            telegram_id=call.from_user.id,
+            call_workout_day=data.get("my_training_programme_day"))
+        page_num = int(callback_data.page)
+
+        page = page_num - 1 if page_num > 0 else 0
+
+        if callback_data.action == "next_mtpsek":
+            page = page_num + 1 if page_num < (len(response) - 1) else page_num
+
+        with suppress(TelegramBadRequest):
+            await call.message.edit_text(text=f'<b>Назва<a href="{response[page][0]}">:</a></b> {response[page][1]}',
+                                         reply_markup=fabrics.pagination_my_training_programme_sport_exercise_kb())
+
     def run(self):
         self.dp.callback_query.register(self.paginator_my_workout,
                                         fabrics.Pagination.filter(F.action.in_(['preliminary', 'next'])))
@@ -141,3 +166,6 @@ class Pagin(BasicInitialisation):
         self.dp.callback_query.register(self.pagination_my_sports_exercises_in_training,
                                         fabrics.PaginationMySportsExercisesInTraining.filter(F.action.in_(
                                             ['preliminary_mseit', 'next_mseit'])))
+        self.dp.callback_query.register(self.paginator_a_sporting_exercise_in_my_training_programme,
+                                        fabrics.PaginationMyTrainingProgrammeSportExercise.filter(F.action.in_(
+                                            ['preliminary_mtpsek', 'next_mtpsek'])))

@@ -36,3 +36,7 @@ class CreateMyWorkout(StatesGroup):
     my_workout_day = State()
     my_muscle_group = State()
     my_sporting_exercise = State()
+
+
+class MyWorkoutProgrammeDay(StatesGroup):
+    my_training_programme_day = State()
