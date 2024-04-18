@@ -124,6 +124,9 @@ my_account_menu = InlineKeyboardMarkup(
             InlineKeyboardButton(text='Плей листи', callback_data='Playlists'),
         ],
         [
+            InlineKeyboardButton(text='Час тренування', callback_data='my_time_workout_commands'),
+        ],
+        [
             InlineKeyboardButton(text='Назад', callback_data='start'),
         ]
     ]
@@ -150,5 +153,25 @@ training_at_home_menu = InlineKeyboardMarkup(
                 callback_data='third_training_at_home'
             )
         ],
+    ]
+)
+
+my_time_workout_inline_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Додати час проведеного тренування",
+                                 callback_data='add_the_time_spent_training_call')
+        ],
+        [
+            InlineKeyboardButton(text="Переглянути статистику за тиждень",
+                                 callback_data="f2")
+        ],
+        [
+            InlineKeyboardButton(text="Переглянути статистику за тиждень",
+                                 callback_data="f3")
+        ],
+        [
+            InlineKeyboardButton(text="Назад", callback_data="my_account")
+        ]
     ]
 )

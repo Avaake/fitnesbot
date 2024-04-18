@@ -1,6 +1,5 @@
-from fitnesbot.utils.basemodel import BasicInitialisation
-from aiogram import Bot, Dispatcher, F
-from database.database import DatabaseManager
+from fitnesbot.utils.basemodel import BasicInitialisationBot
+from aiogram import F
 from aiogram.types import CallbackQuery
 from fitnesbot.keybords import inline
 from aiogram.fsm.context import FSMContext
@@ -8,12 +7,10 @@ from fitnesbot.utils.states import TrainingAtHomeCall
 from fitnesbot.keybords import fabrics
 
 
-class TrainingAtHome(BasicInitialisation):
+class TrainingAtHome(BasicInitialisationBot):
     """
         клас TrainingAtHome працює с тренуваннями для дому
     """
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
 
     async def cmd_training_at_home(self, call: CallbackQuery) -> None:
         """
@@ -42,7 +39,7 @@ class TrainingAtHome(BasicInitialisation):
                  f'<b>Відпочинок:</b> {response[0][5]}',
             reply_markup=fabrics.paginator_training_at_home(backwards=response[0][6]))
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_training_at_home, F.data == "training_at_home", )
         self.dp.callback_query.register(self.cmd_training_at_home_day, F.data.in_([
             "first_training_at_home",

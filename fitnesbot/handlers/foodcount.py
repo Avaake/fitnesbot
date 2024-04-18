@@ -1,15 +1,12 @@
-from aiogram import F, Dispatcher, Bot
+from aiogram import F
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from fitnesbot.utils.states import FoodCounting
-from database.database import DatabaseManager
 from fitnesbot.keybords.builders import meals_kb
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-class AddFood(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
+class AddFood(BasicInitialisationBot):
 
     async def cmd_food(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(FoodCounting.meal)
@@ -38,7 +35,7 @@ class AddFood(BasicInitialisation):
                              f"<b>Жири:</b> {res[4]}\n"
                              f"<b>Вугливоди:</b> {res[5]}")
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_food, F.data == 'add_food')
         self.dp.message.register(self.load_meal, FoodCounting.meal,
                                  F.text.in_(["Сніданок", "Обід", "Вечеря", "Перекус"]))

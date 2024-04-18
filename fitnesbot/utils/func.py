@@ -1,3 +1,5 @@
+from pydantic import BaseModel
+from datetime import time
 UK_EN_ALPHABET = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye', 'ж': 'zh', 'з': 'z',
                   'и': 'y',
                   'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
@@ -57,3 +59,7 @@ class MuscleGroup:
 
 class MuscleID:
     muscle_id: str
+
+
+class TimeModel(BaseModel):
+    time_value: time

@@ -1,5 +1,4 @@
 from aiogram import BaseMiddleware
-from aiogram.types import Message
 from typing import Any, Callable, Dict, Awaitable
 from database.database import DatabaseManager
 from aiogram.types import TelegramObject

@@ -1,22 +1,17 @@
-from aiogram import F, Bot, Dispatcher
+from aiogram import F
 from aiogram.types import CallbackQuery
-from database.database import DatabaseManager
 from fitnesbot.keybords import fabrics, inline
 from fitnesbot.utils import func
 from aiogram.fsm.context import FSMContext
 from fitnesbot.utils.states import MuscleIDs
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
 # muscle = func.MuscleID
 
 
-class SpottingExercises(BasicInitialisation):
+class SpottingExercises(BasicInitialisationBot):
     """Клас TrainingCall містить обробники з тренуванням"""
-
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        # self.user_data = {}  # Словник для збереження даних користувачів
-        super().__init__(bot, dp, db_manager)
 
     async def cmd_workouts(self, call: CallbackQuery):
         """
@@ -54,7 +49,7 @@ class SpottingExercises(BasicInitialisation):
     async def call_training_with_fitness_bands(self, call: CallbackQuery):
         pass
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_workouts, F.data == "workouts")
         self.dp.callback_query.register(self.cmd_list_workout, F.data == "fitness_menu")
         self.dp.callback_query.register(self.cmd_muscle_name, F.data.in_(

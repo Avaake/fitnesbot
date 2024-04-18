@@ -1,19 +1,15 @@
-from aiogram import F, Bot, Dispatcher
+from aiogram import F
 from aiogram.types import CallbackQuery
-from database.database import DatabaseManager
 from fitnesbot.keybords import fabrics, inline
 from fitnesbot.utils import func
 from contextlib import suppress
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
 from fitnesbot.utils.states import ADG
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-class TrainingFromAthletes(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
-
+class TrainingFromAthletes(BasicInitialisationBot):
     async def cmd_workout_programmes_from_athletes(self, call: CallbackQuery, state: FSMContext):
         """
         обробники відповідає на кнопку 'Програми тренувань від спортсменів' та callback training_from_athletes
@@ -87,7 +83,8 @@ class TrainingFromAthletes(BasicInitialisation):
         await state.update_data(muscle_group_athletes=func.CALL_MUSCLE_GROUP_IN_TRAINER[call.data])
         d = await state.get_data()
         print(f"d: {d}")
-        result_from_sql = await self.db_manager.workout_exercises(d.get('sportsman_name'), d.get('workout_day_athletes'),
+        result_from_sql = await self.db_manager.workout_exercises(d.get('sportsman_name'),
+                                                                  d.get('workout_day_athletes'),
                                                                   d.get('muscle_group_athletes'))
         print(result_from_sql)
         await call.message.edit_text(f'Назва вправи<a href="{result_from_sql[0][0]}">:</a> {result_from_sql[0][1]}\n'
@@ -101,7 +98,7 @@ class TrainingFromAthletes(BasicInitialisation):
                                        callback_data: fabrics.Paginationmuscle,
                                        state: FSMContext):
         """
-        Пагінация до cmd_muscle_group
+            Пагінация до cmd_muscle_group
         """
         # user_id = call.from_user.id
         # athlete, workout_day, muscle_group = self.user_data[user_id]
@@ -125,7 +122,7 @@ class TrainingFromAthletes(BasicInitialisation):
                 reply_markup=fabrics.paginator_muscle(exercise[page][-1], page))
         await call.answer()
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_workout_programmes_from_athletes, F.data == "training_from_athletes")
         self.dp.callback_query.register(self.cmd_workout_athlete, F.data.in_(["ar1", "ar2"]), ADG.sportsman_name)
         self.dp.callback_query.register(self.cmd_workout_day_athlete,

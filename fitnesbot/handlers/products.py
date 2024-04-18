@@ -1,11 +1,10 @@
-from aiogram import F, Dispatcher, Bot
+from aiogram import F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 from fitnesbot.filters.is_admin import IsAdmin
 from fitnesbot.utils.states import ProductFPC
-from database.database import DatabaseManager
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 def isfloat(value):
     try:
@@ -15,9 +14,7 @@ def isfloat(value):
         return False
 
 
-class AddProducts(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
+class AddProducts(BasicInitialisationBot):
 
     async def cmd_product(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(ProductFPC.product_name)
@@ -70,7 +67,7 @@ class AddProducts(BasicInitialisation):
         else:
             await message.answer("Має містити ціле число або десятковий дріб")
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_product, F.data == "add_callback", IsAdmin(5600998025))
         self.dp.message.register(self.load_product_name, ProductFPC.product_name)
         self.dp.message.register(self.load_calorie_value, ProductFPC.calorie_value)

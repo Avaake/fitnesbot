@@ -1,17 +1,13 @@
-from aiogram import Bot, Dispatcher, F
+from aiogram import F
 from aiogram.types import WebAppData, CallbackQuery
-from database.database import DatabaseManager
 from fitnesbot.keybords import builders
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 import json
-from typing import List, TYPE_CHECKING
+from typing import List
 from aiogram.fsm.context import FSMContext
 
 
-class TelegramMiniAppsHandlers(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
-
+class TelegramMiniAppsHandlers(BasicInitialisationBot):
     async def nutrient_calculator_handler(self, call: CallbackQuery) -> None:
         await call.message.answer(
             text="Це калькулятор поживних речовин (КБЖВ) який "
@@ -91,7 +87,7 @@ class TelegramMiniAppsHandlers(BasicInitialisation):
                                     reply_markup=builders.cancel_kb)
         await start_bot.my_account.create_my_workout(call=web_mess_data, state=state)
 
-    def run(self) -> None:
+    async def run(self) -> None:
         self.dp.callback_query.register(self.nutrient_calculator_handler, F.data == "nutrientcalculator")
         self.dp.callback_query.register(self.selection_of_diseases, F.data == "selectiondiseases")
         self.dp.message.register(self.nutrient_calculator_web_handler,

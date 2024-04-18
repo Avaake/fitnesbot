@@ -1,22 +1,18 @@
-from aiogram import F, Dispatcher, Bot
+from aiogram import F
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.fsm.context import FSMContext
-from database.database import DatabaseManager
 from fitnesbot.keybords import fabrics
 from contextlib import suppress
 from aiogram.types import CallbackQuery
 from fitnesbot.utils import func
 from fitnesbot.utils.states import MuscleIDs, TrainingAtHomeCall, CreateMyWorkout, MyWorkoutProgrammeDay
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 muscle = func.MuscleID
 
 
-class Pagin(BasicInitialisation):
+class Pagin(BasicInitialisationBot):
     """Клас Pagin містить пагінації для інших команд """
-
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
 
     async def paginator_my_workout(self, call: CallbackQuery, callback_data: fabrics.Pagination):
         response = await self.db_manager.sports_exercises()
@@ -55,7 +51,9 @@ class Pagin(BasicInitialisation):
                                        call: CallbackQuery,
                                        callback_data: fabrics.Paginationmuscle,
                                        state: FSMContext):
-
+        """
+            Пагінація для перегляду спортивних вправ cmd_muscle_name
+        """
         await state.set_state(MuscleIDs.muscle_id)
         data = await state.get_data()
         response = await self.db_manager.sports_trein(muscl_id=data.get('muscle_id'))
@@ -77,7 +75,9 @@ class Pagin(BasicInitialisation):
                                       call: CallbackQuery,
                                       callback_data: fabrics.PaginationTrainingAtHome,
                                       state: FSMContext):
-
+        """
+            Пагінация для програм тренувань вдома cmd_training_at_home_title
+        """
         await state.set_state(TrainingAtHomeCall.title_call)
         data = await state.get_data()
         response = await self.db_manager.training_at_home(training_call=data.get('title_call'))
@@ -102,6 +102,9 @@ class Pagin(BasicInitialisation):
                                                          call: CallbackQuery,
                                                          callback_data: fabrics.PaginationMySportsExercisesInTraining,
                                                          state: FSMContext):
+        """
+            Пагінація для створення славного плану твенувать create_my_workout_load_muscle_group
+        """
         await state.set_state(CreateMyWorkout.my_sporting_exercise)
         data = await state.get_data()
         recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
@@ -136,7 +139,10 @@ class Pagin(BasicInitialisation):
                                                                      call: CallbackQuery,
                                                                      callback_data:
                                                                      fabrics.PaginationMyTrainingProgrammeSportExercise,
-                                                                     state: FSMContext):
+                                                                     state: FSMContext) -> None:
+        """
+            Пагінация для перегляду власного тренування a_sporting_exercise_in_my_training_programme
+        """
         await state.set_state(MyWorkoutProgrammeDay.my_training_programme_day)
         data = await state.get_data()
         response = await self.db_manager.my_training_programme_sport_exercise(
@@ -153,7 +159,7 @@ class Pagin(BasicInitialisation):
             await call.message.edit_text(text=f'<b>Назва<a href="{response[page][0]}">:</a></b> {response[page][1]}',
                                          reply_markup=fabrics.pagination_my_training_programme_sport_exercise_kb())
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.paginator_my_workout,
                                         fabrics.Pagination.filter(F.action.in_(['preliminary', 'next'])))
         self.dp.callback_query.register(self.paginator_food,

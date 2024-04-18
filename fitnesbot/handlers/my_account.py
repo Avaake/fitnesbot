@@ -1,8 +1,7 @@
 from aiogram.fsm.context import FSMContext
 
-from fitnesbot.utils.basemodel import BasicInitialisation
-from aiogram import Bot, Dispatcher, F
-from database.database import DatabaseManager
+from fitnesbot.utils.basemodel import BasicInitialisationBot
+from aiogram import F
 from aiogram.types import CallbackQuery
 from fitnesbot.keybords.inline import my_account_menu
 from fitnesbot.keybords.fabrics import inline_builder_sql, pagination_my_sports_exercises_in_training_kb, \
@@ -12,10 +11,7 @@ from fitnesbot.utils.states import CreateMyWorkout, MyWorkoutProgrammeDay
 from fitnesbot.utils.func import MY_WORKOUT_DAY, CALL_MUSCLE_GROUP
 
 
-class MyAccount(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
-
+class MyAccount(BasicInitialisationBot):
     async def my_account_cmd(self, call: CallbackQuery):
         """
             Повертає Inline клавіатуру особистого кабінету
@@ -35,7 +31,7 @@ class MyAccount(BasicInitialisation):
             button_list = [("Створити тренування", "create_training")]
             await call.message.edit_text(
                 text="Так як у вас не має тренування ви можете його створити, "
-                     "але тренування може біти лише одне на акаунт, "
+                     "але тренування може бути лише одне на акаунт, "
                      "щоб створити інше потрібно спочатку видалити існуюче",
                 reply_markup=inline_builder_sql(button_list, sizes=1, back_cb="my_account",
                                                 add_text=rec_text, add_cb="recommendations_for_the_disease"))
@@ -154,7 +150,6 @@ class MyAccount(BasicInitialisation):
     async def the_day_of_my_training_programme(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(MyWorkoutProgrammeDay.my_training_programme_day)
         response = await self.db_manager.my_training_program_training_day(telegram_id=call.from_user.id)
-        print(response)
         await call.message.edit_text(text="Це дні тренувааня вашої програми",
                                      reply_markup=inline_builder_sql(buttons=response, back_cb="my_account_workout"))
 
@@ -166,7 +161,7 @@ class MyAccount(BasicInitialisation):
                                      reply_markup=pagination_my_training_programme_sport_exercise_kb())
         await call.answer()
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.my_account_cmd, F.data == "my_account")
         self.dp.callback_query.register(self.my_training_account, F.data == "my_account_workout")
         self.dp.callback_query.register(self.create_my_workout, F.data == 'create_training')

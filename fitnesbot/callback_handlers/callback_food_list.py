@@ -1,15 +1,11 @@
-from aiogram import F, Bot, Dispatcher
+from aiogram import F
 from aiogram.types import CallbackQuery
-from database.database import DatabaseManager
 from fitnesbot.keybords import fabrics, inline
 from fitnesbot.utils.func import CALL_FOOD_DICT
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-class CallbackFoodList(BasicInitialisation):
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
-
+class CallbackFoodList(BasicInitialisationBot):
     async def cmd_food_list(self, call: CallbackQuery):
         await call.message.edit_text(f'Привіт! <b>{call.from_user.first_name}</b> це категорії продуктів.\nОбирай '
                                      f'категорію і ти побачиш назву, калорійність та БЖУ',
@@ -26,7 +22,7 @@ class CallbackFoodList(BasicInitialisation):
             reply_markup=fabrics.paginator_food())
         await call.answer()
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.cmd_food_list, F.data == "food_list")
         self.dp.callback_query.register(self.call_fruit_dried_fruit_berrie, F.data.in_(
             ["fruit_dried_fruit_berrie", "herb_vegetable", "mushroom_legume", "egg",

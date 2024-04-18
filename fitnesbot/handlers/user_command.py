@@ -1,21 +1,17 @@
-from aiogram import Bot, Dispatcher, F
+from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command, CommandObject
 from aiogram.types import ReplyKeyboardRemove, Message, CallbackQuery
-from database.database import DatabaseManager
 from fitnesbot.keybords import fabrics, builders
 from fitnesbot.keybords.inline import menu
 from fitnesbot.utils.func import isfloat
-from fitnesbot.utils.basemodel import BasicInitialisation
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-class User(BasicInitialisation):
+class User(BasicInitialisationBot):
     """
         Клас User містить обробники команд які доступні всім користувачас
     """
-
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
 
     async def cmd_start(self, message: Message):
         """Обробник команди start"""
@@ -62,14 +58,14 @@ class User(BasicInitialisation):
         # print(l)
         await call.message.answer("Вибери групу мишц", reply_markup=builders.muscles)
 
-    async def cmd_add_my_workout_time(self, message: Message, command: CommandObject):
-        """Обробник команди time_work є треком часу тренування"""
-        if command.args is not None:
-            workout_time = command.args
-            if workout_time.isnumeric() or isfloat(workout_time):
-                print(command.args)
-                await self.db_manager.add_time_my_workout(workout_time, message.from_user.username)
-                await message.answer("Час додано")
+    # async def cmd_add_my_workout_time(self, message: Message, command: CommandObject):
+    #     """Обробник команди time_work є треком часу тренування"""
+    #     if command.args is not None:
+    #         workout_time = command.args
+    #         if workout_time.isnumeric() or isfloat(workout_time):
+    #             print(command.args)
+    #             await self.db_manager.add_time_my_workout(workout_time, message.from_user.username)
+    #             await message.answer("Час додано")
 
     async def cancel_handler(self, message: Message, state: FSMContext):
         """Обробник команди cancel зупиняє state"""
@@ -82,7 +78,7 @@ class User(BasicInitialisation):
             reply_markup=ReplyKeyboardRemove(),
         )
 
-    def run(self):
+    async def run(self):
         """регеєструє всі обробники """
         self.dp.message.register(self.cmd_start, Command('start'))
         self.dp.callback_query.register(self.call_cmd_start, F.data == 'start')
@@ -93,4 +89,4 @@ class User(BasicInitialisation):
         self.dp.message.register(self.cmd_p, Command('pid'))
         self.dp.callback_query.register(self.cnd_my_workout, F.data == "my_workout")
         self.dp.callback_query.register(self.cmd_my_workout_class, F.data == "my_workout_clas")
-        self.dp.message.register(self.cmd_add_my_workout_time, Command('time_work'))
+        # self.dp.message.register(self.cmd_add_my_workout_time, Command('time_work'))

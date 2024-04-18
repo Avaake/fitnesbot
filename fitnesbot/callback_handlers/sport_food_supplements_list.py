@@ -1,23 +1,14 @@
-from aiogram import Bot, Dispatcher, F
-from aiogram.fsm.context import FSMContext
-from aiogram.filters import Command, CommandObject
-from aiogram.types import ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import Message, CallbackQuery
-from database.database import DatabaseManager
-from fitnesbot.keybords import fabrics, builders
-from fitnesbot.keybords.inline import menu
-from fitnesbot.utils.states import AdditiveNamesCall
-from fitnesbot.utils.basemodel import BasicInitialisation
+from aiogram import F
+from aiogram.types import CallbackQuery
+from fitnesbot.keybords import fabrics
+from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-class SupplementsMenu(BasicInitialisation):
+class SupplementsMenu(BasicInitialisationBot):
     """
     Клас SupplementsMenu успадковується від класу BasicInitialisation
     містить обробники callbecks які повертають інформацію о спотривних/харчових добавках, вытамінах
     """
-
-    def __init__(self, bot: Bot, dp: Dispatcher, db_manager: DatabaseManager):
-        super().__init__(bot, dp, db_manager)
 
     async def additives_menu(self, call: CallbackQuery) -> None:
         res = await self.db_manager.additives_inline()
@@ -50,7 +41,7 @@ class SupplementsMenu(BasicInitialisation):
                 title="Назад", callback_title=previous_title_and_txt[0]))
         await call.answer()
 
-    def run(self):
+    async def run(self):
         self.dp.callback_query.register(self.additives_menu, F.data == "additives_call")
         self.dp.callback_query.register(self.additives_groups, F.data.in_(
             ["additive_group_1", "additive_group_2", "additive_group_3", "additive_group_4",
