@@ -171,7 +171,7 @@ def build_inline_keyboard(buttons: list, add_cb: str = None):
 
 def inline_builder_sql(buttons: List[tuple],
                        sizes: int | List[int] = 2,
-                       back_txt: str = "Назад",
+                       back_txt: str = "⬅ Назад",
                        back_cb: str = None,
                        call_url: str = None,
                        add_text: str = None,
@@ -205,5 +205,5 @@ def playlists_menu(buttons: list[tuple]) -> InlineKeyboardMarkup:
         builder.button(text=text, url=link)
 
     builder.adjust(2)
-    builder.row(InlineKeyboardButton(text="Назад", callback_data="my_account"))
+    builder.row(InlineKeyboardButton(text="⬅ Назад", callback_data="my_account"))
     return builder.as_markup()

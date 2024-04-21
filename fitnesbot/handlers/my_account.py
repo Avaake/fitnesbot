@@ -16,7 +16,8 @@ class MyAccount(BasicInitialisationBot):
         """
             Повертає Inline клавіатуру особистого кабінету
         """
-        await call.message.edit_text("Це твій особистий кабінет", reply_markup=my_account_menu)
+        await call.message.edit_text(text=f"{call.from_user.first_name}. Це твій особистий кабінет",
+                                     reply_markup=my_account_menu)
         await call.answer()
 
     async def my_training_account(self, call: CallbackQuery):
@@ -26,9 +27,9 @@ class MyAccount(BasicInitialisationBot):
         """
         response = await self.db_manager.check_if_the_user_has_any_training(call.from_user.id)
         recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
-        rec_text = "Увімкнути рекомендації" if recommendation_response == 0 else "Вимкнути рекомендації"
+        rec_text = "Увімкнути рекомендації 🔔💡" if recommendation_response == 0 else "Вимкнути рекомендації 🔕💡"
         if response[0] == 0:
-            button_list = [("Створити тренування", "create_training")]
+            button_list = [("Створити тренування 🏋️‍♂️✏️", "create_training")]
             await call.message.edit_text(
                 text="Так як у вас не має тренування ви можете його створити, "
                      "але тренування може бути лише одне на акаунт, "
@@ -36,8 +37,8 @@ class MyAccount(BasicInitialisationBot):
                 reply_markup=inline_builder_sql(button_list, sizes=1, back_cb="my_account",
                                                 add_text=rec_text, add_cb="recommendations_for_the_disease"))
         else:
-            button_list = [("Моє тренування", "my_training_programme_day"),
-                           ("Видалити тренування", "delete_my_training_account"), ]
+            button_list = [("Моє тренування 💪🏋️‍♂️", "my_training_programme_day"),
+                           ("Видалити тренування 🗑️🏋️‍♂️", "delete_my_training_account"), ]
             await call.message.edit_text(text="Тренування",
                                          reply_markup=inline_builder_sql(button_list, sizes=1, back_cb="my_account"))
 

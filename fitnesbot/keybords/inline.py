@@ -114,20 +114,20 @@ mein2 = InlineKeyboardMarkup(
 my_account_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text='Розрахуй дену калорійність', callback_data='nutrientcalculator'),
+            InlineKeyboardButton(text='Розрахуй дену калорійність 🔢🍽️', callback_data='nutrientcalculator'),
         ],
         [
-            InlineKeyboardButton(text='Вибіри своЇ захворювання', callback_data='selectiondiseases'),
+            InlineKeyboardButton(text='Вибіри своЇ захворювання 😖💊', callback_data='selectiondiseases'),
         ],
         [
-            InlineKeyboardButton(text='Мої тренування', callback_data='my_account_workout'),
-            InlineKeyboardButton(text='Плей листи', callback_data='Playlists'),
+            InlineKeyboardButton(text='Мої тренування 💪', callback_data='my_account_workout'),
+            InlineKeyboardButton(text='Плей листи 🎶', callback_data='Playlists'),
         ],
         [
-            InlineKeyboardButton(text='Час тренування', callback_data='my_time_workout_commands'),
+            InlineKeyboardButton(text='Час тренування 🕒🏃‍♂️', callback_data='my_time_workout_commands'),
         ],
         [
-            InlineKeyboardButton(text='Назад', callback_data='start'),
+            InlineKeyboardButton(text='⬅ Назад', callback_data='start'),
         ]
     ]
 )
@@ -159,19 +159,19 @@ training_at_home_menu = InlineKeyboardMarkup(
 my_time_workout_inline_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text="Додати час проведеного тренування",
+            InlineKeyboardButton(text="Додати час проведеного тренування ➕⏱️💪",
                                  callback_data='add_the_time_spent_training_call')
         ],
         [
-            InlineKeyboardButton(text="Переглянути статистику за тиждень",
-                                 callback_data="f2")
+            InlineKeyboardButton(text="Переглянути статистику за остані 7 днів 📊7️⃣",
+                                 callback_data="analytics_of_training_last_7_days")
         ],
         [
-            InlineKeyboardButton(text="Переглянути статистику за тиждень",
-                                 callback_data="f3")
+            InlineKeyboardButton(text="Переглянути статистику за останії місяць 📊📆",
+                                 callback_data="analytics_of_training_last_month")
         ],
         [
-            InlineKeyboardButton(text="Назад", callback_data="my_account")
+            InlineKeyboardButton(text="⬅ Назад", callback_data="my_account")
         ]
     ]
 )

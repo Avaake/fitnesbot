@@ -58,15 +58,6 @@ class User(BasicInitialisationBot):
         # print(l)
         await call.message.answer("Вибери групу мишц", reply_markup=builders.muscles)
 
-    # async def cmd_add_my_workout_time(self, message: Message, command: CommandObject):
-    #     """Обробник команди time_work є треком часу тренування"""
-    #     if command.args is not None:
-    #         workout_time = command.args
-    #         if workout_time.isnumeric() or isfloat(workout_time):
-    #             print(command.args)
-    #             await self.db_manager.add_time_my_workout(workout_time, message.from_user.username)
-    #             await message.answer("Час додано")
-
     async def cancel_handler(self, message: Message, state: FSMContext):
         """Обробник команди cancel зупиняє state"""
         current_state = await state.get_state()
@@ -89,4 +80,3 @@ class User(BasicInitialisationBot):
         self.dp.message.register(self.cmd_p, Command('pid'))
         self.dp.callback_query.register(self.cnd_my_workout, F.data == "my_workout")
         self.dp.callback_query.register(self.cmd_my_workout_class, F.data == "my_workout_clas")
-        # self.dp.message.register(self.cmd_add_my_workout_time, Command('time_work'))

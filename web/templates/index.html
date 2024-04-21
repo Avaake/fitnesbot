@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,41 +7,37 @@
     <title>calcbzy</title>
 </head>
 <body>
-    <header>
+    <div class="container-center">
         <h1>Калькулятор БЖУ і калорій</h1>
-    </header>
-    <section>
-        <form class="form">
-            <input type="text" placeholder="Вік" id="age" autocomplete="off">
-            <input type="text" placeholder="Вага" id="weight" autocomplete="off">
-            <input type="text" placeholder="Зріст в см" id="growth" autocomplete="off">
+        <label for="age"></label><input type="text" placeholder="Вік" id="age" autocomplete="off">
+        <label for="weight"></label><input type="text" placeholder="Вага" id="weight" autocomplete="off">
+        <label for="growth"></label><input type="text" placeholder="Зріст в см" id="growth" autocomplete="off">
 
-            <label for="gender">Стать:</label>
-            <select id="gender">
-                <option value="">Виберіть стать</option>
-                <option value="male">Чоловік</option>
-                <option value="female">Жінка</option>
-            </select>
+        <label for="gender"></label>
+        <select id="gender">
+            <option value="">Виберіть стать</option>
+            <option value="male">Чоловік</option>
+            <option value="female">Жінка</option>
+        </select>
 
-            <label for="activity-level">Рівень активності:</label>
-            <select id="activity-level" name="activity-level">
-                <option value="">Виберіть рівень активності</option>
-                <option value="sedentary">сидячий спосіб життя (без фізичних навантажень)</option>
-                <option value="moderate">помірна активність (легкі фізичні навантаження або заняття 1-2 рази на тиждень)</option>
-                <option value="active">середня активність (фізичні навантаження 3-5 разів на тиждень)</option>
-                <option value="high">висока активність (щоденні фізичні навантаження)</option>
-                <option value="extra">екстра активність (фіз. праця + щоденні фіз. навантаження, проф. спортсмени)</option>
-            </select>
+        <label for="activity-level"></label>
+        <select id="activity-level" name="activity-level">
+            <option value="">Виберіть рівень активності</option>
+            <option value="sedentary">сидячий спосіб життя (без фізичних навантажень)</option>
+            <option value="moderate">помірна активність (легкі фізичні навантаження або заняття 1-2 рази на тиждень)</option>
+            <option value="active">середня активність (фізичні навантаження 3-5 разів на тиждень)</option>
+            <option value="high">висока активність (щоденні фізичні навантаження)</option>
+            <option value="extra">екстра активність (фіз. праця + щоденні фіз. навантаження, проф. спортсмени)</option>
+        </select>
 
-            <label for="goal">Мета:</label>
-            <select id="goal" name="goal">
-                <option value="maintenance">Підтримання форми</option>
-                <option value="weight_loss">Схуднення</option>
-                <option value="weight_gain">Набір ваги</option>
-            </select>
-            <button id="finish__from">Розрахувати</button>
-        </form>
-    </section>
+        <label for="goal"></label>
+        <select id="goal" name="goal">
+            <option value="maintenance">Підтримання форми</option>
+            <option value="weight_loss">Схуднення</option>
+            <option value="weight_gain">Набір ваги</option>
+        </select>
+        <button id="finish__from">Розрахувати</button>
+    </div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;

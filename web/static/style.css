@@ -9,32 +9,33 @@
 body {
     font-family: 'Poppins', sans-serif;
     color: #f0cb51;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background: url(solid-concrete-wall-textured-backdrop_53876-129493.avif);
-    overflow: hidden; /* auto/hidden */
-    font-weight: 300;
-    line-height: 1.7;
-    min-height: 100vh;
+    overflow: hidden
 }
 
-h1 {
+.container-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    font-size: 23px;
-    margin-bottom: 15px;
-    margin-top: 15px;
 }
+
 
 input, select {
     border-radius: 20px;
     width: 330px;
     padding: 15px;
-    display: block;
     margin-bottom: 10px;
     color: #f0cb51;
     background-color: rgba(84, 117, 7, 0.1);
     border: none;
+}
+
+h1 {
+    font-size: 23px;
+    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 input::placeholder {
@@ -79,5 +80,4 @@ button:hover {
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
     transition: all 0.2s ease-out;
-
 }

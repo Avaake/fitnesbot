@@ -169,14 +169,48 @@ class DatabaseManager:
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
-    async def add_time_my_workout(self, workout_time: str, username: str):
+    async def add_time_my_workout(self, time_workout: str, telegra_id: int):
         try:
-            sql_command = """INSERT INTO time_my_workout (workout_time, users)
+            sql_command = """INSERT INTO time_my_workout (telegra_id, time_workout)
                              VALUES (%s, %s)"""
 
             async with self.__mydb.cursor() as cursor:
-                await cursor.execute(sql_command, (workout_time, username))
-            self.__mydb.commit()
+                await cursor.execute(sql_command, (telegra_id, time_workout))
+                await self.__mydb.commit()
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def training_time_in_the_last_7_days(self, telegram_id: int):
+        try:
+            sql_command = """
+                SELECT time_workout 
+                FROM time_my_workout
+                WHERE DATE_FORMAT(addition_time, 'Y-m-d') >= DATE_FORMAT(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 7 DAY), 
+                'Y-m-d')
+                AND DATE_FORMAT(addition_time, 'Y-m-d') <= DATE_FORMAT(CURRENT_TIMESTAMP, 'Y-m-d')
+                AND telegra_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = [j for i in await cursor.fetchall() for j in i]
+                return data
+        except aiomysql.Error as exc:
+            logging.error(f"{exc}")
+
+    async def training_time_in_the_last_month(self, telegram_id: int):
+        try:
+            sql_command = """
+                SELECT time_workout 
+                FROM time_my_workout
+                WHERE DATE_FORMAT(addition_time, 'Y-m-d') >= DATE_FORMAT(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 MONTH), 
+                'Y-m-d')
+                AND DATE_FORMAT(addition_time, 'Y-m-d') <= DATE_FORMAT(CURRENT_TIMESTAMP, 'Y-m-d')
+                AND telegra_id = %s
+            """
+            async with self.__mydb.cursor() as cursor:
+                await cursor.execute(sql_command, (telegram_id,))
+                data = [j for i in await cursor.fetchall() for j in i]
+                return data
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
