@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from fastapi.applications import AppType
 
-from fitnesbot.handlers import user_command, products, foodcount, my_account
-from fitnesbot.callback_handlers import (pagination, callback_food_list, spotting_exercises_call,
+from fitnesbot.handlers import user_command, products, nutrition, my_account
+from fitnesbot.callback_handlers import (pagination, spotting_exercises_call,
                                          sport_food_supplements_list,
-                                         training_from_athletes, training_at_home, my_workout_time)
+                                         training_from_athletes, training_at_home, my_activity_tracker)
 from fitnesbot.mini_app import mini_apps_handlers
 from aiogram.fsm.storage.memory import MemoryStorage
 from config import settings
@@ -18,16 +18,15 @@ class RunBot(BasicInitialisationBot):
     def __init__(self):
         self.user_command = user_command.User()
         self.products = products.AddProducts()
-        self.food_count = foodcount.AddFood()
+        self.food_count = nutrition.Nutrition()
         self.pag = pagination.Pagin()
-        self.call_food_list = callback_food_list.CallbackFoodList()
         self.train_call = spotting_exercises_call.SpottingExercises()
         self.sport_food_supplements_list = sport_food_supplements_list.SupplementsMenu()
         self.mini_apps_handlers = mini_apps_handlers.TelegramMiniAppsHandlers()
         self.training_from_athletes = training_from_athletes.TrainingFromAthletes()
         self.training_at_home = training_at_home.TrainingAtHome()
         self.my_account = my_account.MyAccount()
-        self.my_workout_time = my_workout_time.MyWorkoutTime()
+        self.my_workout_time = my_activity_tracker.MyActivityTracker()
 
     async def lifespan(self, app: FastAPI) -> AppType:
         try:
@@ -39,7 +38,6 @@ class RunBot(BasicInitialisationBot):
             await self.products.run()
             await self.food_count.run()
             await self.pag.run()
-            await self.call_food_list.run()
             await self.train_call.run()
             await self.sport_food_supplements_list.run()
             await self.mini_apps_handlers.run()

@@ -87,12 +87,34 @@ class TelegramMiniAppsHandlers(BasicInitialisationBot):
                                     reply_markup=builders.cancel_kb)
         await start_bot.my_account.create_my_workout(call=web_mess_data, state=state)
 
+    async def adding_food_handlers(self, call: CallbackQuery) -> None:
+        await call.message.answer(text="Нажимай на кнопку та додавай свій примйом їжі до щоденика",
+                                  reply_markup=builders.web_keyboard_builder(txt="Додавання прийому їжі",
+                                                                             webapp="/users/adding_food"))
+
+    async def handler_mini_app_adding_food(self, web_mess_data: WebAppData):
+        data = json.loads(web_mess_data.web_app_data.data)
+        print(data)
+        await self.db_manager.add_user_information_about_nutrition(nutrition_day=data.get("intake"),
+                                                                   nutrition_info=data.get("food_name"),
+                                                                   calorie=data.get("сalories"),
+                                                                   proteins=data.get("proteins"),
+                                                                   fats=data.get("fats"),
+                                                                   carbohydrates=data.get("carbohydrates"),
+                                                                   telegram_id=web_mess_data.chat.id)
+        await self.bot.send_message(web_mess_data.chat.id,
+                                    f'Прийом їжі було додано',
+                                    reply_markup=builders.cancel_kb)
+
     async def run(self) -> None:
         self.dp.callback_query.register(self.nutrient_calculator_handler, F.data == "nutrientcalculator")
         self.dp.callback_query.register(self.selection_of_diseases, F.data == "selectiondiseases")
+        self.dp.callback_query.register(self.adding_food_handlers, F.data == "add_meals_call")
         self.dp.message.register(self.nutrient_calculator_web_handler,
                                  F.web_app_data.button_text == "🧮 Калькулятор калорій та БЖВ")
         self.dp.message.register(self.selection_of_diseases_web_handler,
                                  F.web_app_data.button_text == "Вибір присутніх захворювань")
         self.dp.message.register(self.selection_of_diseases_web_handler_in_create_workout,
                                  F.web_app_data.button_text == "Спочатку вебери свої захворювання")
+        self.dp.message.register(self.handler_mini_app_adding_food,
+                                 F.web_app_data.button_text == "Додавання прийому їжі")

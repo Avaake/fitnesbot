@@ -40,6 +40,11 @@ class PaginationMyTrainingProgrammeSportExercise(CallbackData, prefix="pagmytrai
     page: int
 
 
+class PaginationToViewRecipes(CallbackData, prefix="pagtoviewrecipes"):
+    action: str
+    page: int
+
+
 def paginator(page: int = 0):
     builder = InlineKeyboardBuilder()
     builder.row(
@@ -57,7 +62,7 @@ def paginator_food(page: int = 0):
         InlineKeyboardButton(text='⬅', callback_data=PaginationFood(action='preliminary_f', page=page).pack()),
         InlineKeyboardButton(text='➡', callback_data=PaginationFood(action='next_f', page=page).pack()),
         width=2
-    ).row(InlineKeyboardButton(text="Назад", callback_data='food_list'))
+    ).row(InlineKeyboardButton(text="⬅ Назад", callback_data='food_list'))
     return builder.as_markup()
 
 
@@ -65,7 +70,7 @@ def paginator_muscle_worcout(page: int = 0):
     builder = InlineKeyboardBuilder()
     builder.add(
         InlineKeyboardButton(text='⬅', callback_data=Paginationmuscle(action='preliminary_m', page=page).pack()),
-        InlineKeyboardButton(text="Назад", callback_data="fitness_menu"),
+        InlineKeyboardButton(text="⬅ Назад", callback_data="fitness_menu"),
         InlineKeyboardButton(text='➡', callback_data=Paginationmuscle(action='next_m', page=page).pack()),
     )
     return builder.as_markup()
@@ -86,7 +91,7 @@ def paginator_training_at_home(backwards: str, page: int = 0) -> InlineKeyboardM
     builder.add(
         InlineKeyboardButton(text='⬅',
                              callback_data=PaginationTrainingAtHome(action='preliminary_triathome', page=page).pack()),
-        InlineKeyboardButton(text="Назад", callback_data=backwards),
+        InlineKeyboardButton(text="⬅ Назад", callback_data=backwards),
         InlineKeyboardButton(text='➡',
                              callback_data=PaginationTrainingAtHome(action='next_triathome', page=page).pack()),
     )
@@ -117,10 +122,24 @@ def pagination_my_training_programme_sport_exercise_kb(page: int = 0) -> InlineK
         InlineKeyboardButton(text='⬅',
                              callback_data=PaginationMyTrainingProgrammeSportExercise(action="preliminary_mtpsek",
                                                                                       page=page).pack()),
-        InlineKeyboardButton(text="Назад", callback_data="my_training_programme_day"),
+        InlineKeyboardButton(text="⬅ Назад", callback_data="my_training_programme_day"),
         InlineKeyboardButton(text='➡',
                              callback_data=PaginationMyTrainingProgrammeSportExercise(action="next_mtpsek",
                                                                                       page=page).pack())
+    )
+    return builder.as_markup()
+
+
+def pagination_to_view_recipes_kb(page: int = 0) -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    builder.row(
+        InlineKeyboardButton(text='⬅',
+                             callback_data=PaginationToViewRecipes(action="preliminary_tovr",
+                                                                   page=page).pack()),
+        InlineKeyboardButton(text="⬅ Назад", callback_data="nutrition_call"),
+        InlineKeyboardButton(text='➡',
+                             callback_data=PaginationToViewRecipes(action="next_tovr",
+                                                                   page=page).pack())
     )
     return builder.as_markup()
 

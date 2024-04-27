@@ -157,7 +157,26 @@ class Pagin(BasicInitialisationBot):
 
         with suppress(TelegramBadRequest):
             await call.message.edit_text(text=f'<b>Назва<a href="{response[page][0]}">:</a></b> {response[page][1]}',
-                                         reply_markup=fabrics.pagination_my_training_programme_sport_exercise_kb())
+                                         reply_markup=fabrics.pagination_my_training_programme_sport_exercise_kb(
+                                             page=page))
+
+    async def pagination_to_view_recipes(self,
+                                         call: CallbackQuery,
+                                         callback_data:
+                                         fabrics.PaginationToViewRecipes
+                                         ) -> None:
+        response = await self.db_manager.recipes_information()
+        page_num = int(callback_data.page)
+
+        page = page_num - 1 if page_num > 0 else 0
+
+        if callback_data.action == "next_tovr":
+            page = page_num + 1 if page_num < (len(response) - 1) else page_num
+
+        with suppress(TelegramBadRequest):
+            await call.message.edit_text(text=f'<b>Назва<a href="{response[page][1]}">:</a></b> {response[page][2]}'
+                                              f'<b>Інгредієнти</b> {response[page][3]}',
+                                         reply_markup=fabrics.pagination_to_view_recipes_kb(page=page))
 
     async def run(self):
         self.dp.callback_query.register(self.paginator_my_workout,
@@ -175,3 +194,6 @@ class Pagin(BasicInitialisationBot):
         self.dp.callback_query.register(self.paginator_a_sporting_exercise_in_my_training_programme,
                                         fabrics.PaginationMyTrainingProgrammeSportExercise.filter(F.action.in_(
                                             ['preliminary_mtpsek', 'next_mtpsek'])))
+        self.dp.callback_query.register(self.paginator_a_sporting_exercise_in_my_training_programme,
+                                        fabrics.PaginationToViewRecipes.filter(F.action.in_(
+                                            ['preliminary_tovr', 'next_tovr'])))

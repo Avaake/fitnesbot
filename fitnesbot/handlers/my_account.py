@@ -16,7 +16,8 @@ class MyAccount(BasicInitialisationBot):
         """
             Повертає Inline клавіатуру особистого кабінету
         """
-        await call.message.edit_text(text=f"{call.from_user.first_name}. Це твій особистий кабінет",
+        await call.message.edit_text(text=f"Привіт {call.from_user.first_name}! Це твій особистий кабінет. "
+                                          f"Можеш починати тичяти по кнопкам",
                                      reply_markup=my_account_menu)
         await call.answer()
 
@@ -26,9 +27,9 @@ class MyAccount(BasicInitialisationBot):
             то пропонує створити тренування
         """
         response = await self.db_manager.check_if_the_user_has_any_training(call.from_user.id)
-        recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
-        rec_text = "Увімкнути рекомендації 🔔💡" if recommendation_response == 0 else "Вимкнути рекомендації 🔕💡"
         if response[0] == 0:
+            recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
+            rec_text = "Увімкнути рекомендації 🔔💡" if recommendation_response == 0 else "Вимкнути рекомендації 🔕💡"
             button_list = [("Створити тренування 🏋️‍♂️✏️", "create_training")]
             await call.message.edit_text(
                 text="Так як у вас не має тренування ви можете його створити, "

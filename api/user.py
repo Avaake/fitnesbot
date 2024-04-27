@@ -17,3 +17,8 @@ async def root(request: Request):
 @router.get("/disease")
 async def disease(request: Request):
     return templates.TemplateResponse("disease.html", {"request": request})
+
+
+@router.get("/adding_food")
+async def disease(request: Request):
+    return templates.TemplateResponse("food.html", {"request": request})

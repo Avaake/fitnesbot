@@ -3,7 +3,6 @@ import json
 import logging
 
 from typing import List
-from math import ceil
 import aiomysql
 from config import settings
 
@@ -115,44 +114,22 @@ class DatabaseManager:
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
-    async def func(self, pram):
+    async def add_user_information_about_nutrition(self,
+                                                   nutrition_day: str,
+                                                   nutrition_info: str,
+                                                   calorie: str,
+                                                   proteins: str,
+                                                   fats: str,
+                                                   carbohydrates: str,
+                                                   telegram_id: int):
         try:
-            sql_command = (f"select calorie_value , fats, proteins, carbohydrates "
-                           f"from products "
-                           f"where product_name = %s")
-            async with self.__mydb.cursor() as cursor:
-                await cursor.execute(sql_command, (pram,))
-                data = await cursor.fetchone()
-                return data
-        except aiomysql.Error as exc:
-            logging.error(f"{exc}")
-
-    async def add_count_calories(self, args: List, user: str):
-        try:
-            calorie, protein, fat, carbohydrate = 0, 0, 0, 0
-            temporary = []
-            food_list = list(args)
-            key_value_pairs = [pair.strip() for pair in food_list[-1].split(',')]
-            food_dict = {i.split("-")[0].strip(): i.split("-")[1].strip() for i in key_value_pairs}
-
-            for key, value in food_dict.items():
-                r = await self.func(key)
-                calorie += calorie_calculation(r[0], value)
-                protein += calorie_calculation(r[2], value)
-                fat += calorie_calculation(r[1], value)
-                carbohydrate += calorie_calculation(r[-1], value)
-            temporary.append(int(calorie)), temporary.append(protein)
-            temporary.append(ceil(fat)), temporary.append(ceil(carbohydrate))
-            food_list.extend(temporary)
-            food_list.append(user)
-
-            sql_command = ("""INSERT INTO nutrition_info(nutrition_day, nutrition_info, calorie, proteins, fats, 
-                              carbohydrates, users) VALUES (%s, %s, %s, %s, %s, %s, %s)""")
+            sql_command = ("""INSERT INTO nutrition_user_info(nutrition_day, nutrition_info, calorie, proteins, fats, 
+                              carbohydrates, telegram_id) VALUES (%s, %s, %s, %s, %s, %s, %s)""")
 
             async with self.__mydb.cursor() as cursor:
-                await cursor.execute(sql_command, food_list)
-            self.__mydb.commit()
-            return food_list
+                await cursor.execute(sql_command, (nutrition_day, nutrition_info, calorie, proteins, fats,
+                                                   carbohydrates, telegram_id))
+            await self.__mydb.commit()
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
         except BaseException as exc:
@@ -214,19 +191,15 @@ class DatabaseManager:
         except aiomysql.Error as exc:
             logging.error(f"{exc}")
 
-    async def food_information(self, product_category_id):
-        """Таблица удалена нужно востановить"""
+    async def recipes_information(self) -> List[tuple]:
         try:
-            sql_command = (
-                "select products_name, calorie_value, proteins, fats, carbohydrates "
-                "from products1 "
-                "where products_category_id = %s"
-            )
-
+            sql_command = """
+                SELECT recipt_id, photo_of_dish, dish_name, ingredients
+                FROM recipes
+            """
             async with self.__mydb.cursor() as cursor:
-                await cursor.execute(sql_command, (product_category_id,))
+                await cursor.execute(sql_command)
                 data = await cursor.fetchall()
-                # print(exercise)
                 return data
         except aiomysql.Error as exc:
             logging.error(f"{exc}")

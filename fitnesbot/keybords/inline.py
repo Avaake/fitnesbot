@@ -3,23 +3,48 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text='Add', callback_data='add_callback')
-        ],
-        [
-            InlineKeyboardButton(text="Додавання прийому їжі", callback_data='add_food')
-        ],
-        [
             InlineKeyboardButton(text="Мій акаунт", callback_data='my_account')
         ],
         [
-            InlineKeyboardButton(text="Список еди", callback_data='food_list')
+            InlineKeyboardButton(text="Харчування", callback_data='nutrition_call')
         ],
         [
-            InlineKeyboardButton(text="Дообавки та Вітаміни", callback_data='additives_call')
+            InlineKeyboardButton(text="БАДи та Вітаміни", callback_data='additives_call')
         ],
         [
             InlineKeyboardButton(text="Тренування", callback_data='workouts')
-        ]
+        ],
+        [
+            InlineKeyboardButton(text="Допомога", callback_data='help_call')
+        ],
+    ]
+)
+
+nutrition_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Продукти", callback_data='food_list')
+        ],
+        [
+            InlineKeyboardButton(text="Рецепти", callback_data='recipes_call')
+        ],
+        [
+            InlineKeyboardButton(text="Головне меню", callback_data='start')
+        ],
+    ]
+)
+
+help_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Отримати інформацію", callback_data='get_information_help')
+        ],
+        [
+            InlineKeyboardButton(text="Лист до техпідтримки", callback_data='letter_to_technical_support')
+        ],
+        [
+            InlineKeyboardButton(text="Головне меню", callback_data='start')
+        ],
     ]
 )
 
@@ -51,7 +76,7 @@ category_food = InlineKeyboardMarkup(
             InlineKeyboardButton(text="🧈 Жири, маргарин, олія", callback_data='fat_margarine_oil')
         ],
         [
-            InlineKeyboardButton(text='Головне Меню', callback_data='start')
+            InlineKeyboardButton(text='Головне Меню', callback_data='nutrition_call')
         ]
     ]
 )
@@ -83,7 +108,7 @@ training_programmes_from_athletes = InlineKeyboardMarkup(
             InlineKeyboardButton(text='Тренування Дуейна Джонсона', callback_data='ar2')
         ],
         [
-            InlineKeyboardButton(text='Назад', callback_data='workouts')
+            InlineKeyboardButton(text='⬅ Назад', callback_data='workouts')
         ]
     ]
 )
@@ -124,10 +149,10 @@ my_account_menu = InlineKeyboardMarkup(
             InlineKeyboardButton(text='Плей листи 🎶', callback_data='Playlists'),
         ],
         [
-            InlineKeyboardButton(text='Час тренування 🕒🏃‍♂️', callback_data='my_time_workout_commands'),
+            InlineKeyboardButton(text='Трекер активностей', callback_data='activity_trackers_call'),
         ],
         [
-            InlineKeyboardButton(text='⬅ Назад', callback_data='start'),
+            InlineKeyboardButton(text='Головне меню', callback_data='start'),
         ]
     ]
 )
@@ -153,6 +178,22 @@ training_at_home_menu = InlineKeyboardMarkup(
                 callback_data='third_training_at_home'
             )
         ],
+    ]
+)
+
+my_activity_tracker_menu = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(text="Час тренування 🕒🏃‍",
+                                 callback_data='my_time_workout_commands')
+        ],
+        [
+            InlineKeyboardButton(text="Прийоми Їжі",
+                                 callback_data="add_meals_call")
+        ],
+        [
+            InlineKeyboardButton(text="⬅ Назад", callback_data="activity_trackers_call")
+        ]
     ]
 )
 

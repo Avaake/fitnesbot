@@ -2,13 +2,19 @@ from fitnesbot.utils.basemodel import BasicInitialisationBot
 from aiogram import F
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
-from fitnesbot.keybords.inline import my_time_workout_inline_menu
+from fitnesbot.keybords.inline import my_time_workout_inline_menu, my_activity_tracker_menu
 from fitnesbot.utils.func import TimeModel
 from fitnesbot.utils.states import MyWorkoutTimeState
 from fitnesbot.keybords.fabrics import inline_back_button
 
 
-class MyWorkoutTime(BasicInitialisationBot):
+class MyActivityTracker(BasicInitialisationBot):
+
+    async def my_activity_tracker_handler(self, call: CallbackQuery) -> None:
+        await call.message.edit_text(text="Це твій трекер активності. Тицяй на одну з кнопок та продовжуй",
+                                     reply_markup=my_activity_tracker_menu)
+        await call.answer()
+
     async def my_time_workout_commands_handler(self, call: CallbackQuery) -> None:
         """Меню для маніпуляції з часом тренувань"""
         await call.message.edit_text(
@@ -70,6 +76,7 @@ class MyWorkoutTime(BasicInitialisationBot):
         await self.edit_workout_time_message(call=call, period="останії місяць", response=response)
 
     async def run(self):
+        self.dp.callback_query.register(self.my_activity_tracker_handler, F.data == "activity_trackers_call")
         self.dp.callback_query.register(self.my_time_workout_commands_handler, F.data == "my_time_workout_commands")
         self.dp.callback_query.register(self.add_the_time_spent_workout_start_handler,
                                         F.data == "add_the_time_spent_training_call")

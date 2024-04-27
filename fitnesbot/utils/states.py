@@ -44,3 +44,7 @@ class MyWorkoutProgrammeDay(StatesGroup):
 
 class MyWorkoutTimeState(StatesGroup):
     my_workout_time = State()
+
+
+class LetterToTechnicalSupport(StatesGroup):
+    letter_in_support = State()

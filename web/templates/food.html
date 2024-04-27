@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Info Food</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container-center">
+        <h1>Щоденник для харчування</h1>
+        <label for="intake"></label>
+        <select id="intake">
+            <option value="">Виберіть прийом їжі</option>
+            <option value="breakfast">Сніданок</option>
+            <option value="lunch">Обід</option>
+            <option value="dinner">Вечеря</option>
+            <option value="snack">Перекус</option>
+        </select>
+        <label for="food_name"></label><input type="text" placeholder="Назва(и) їжі" id="food_name" autocomplete="off">
+        <label for="сalories"></label><input type="text" placeholder="Кількість Калорій" id="сalories" autocomplete="off">
+        <label for="proteins"></label><input type="text" placeholder="Кількість білків" id="proteins" autocomplete="off">
+        <label for="fats"></label><input type="text" placeholder="Кількість жирів" id="fats" autocomplete="off">
+        <label for="carbohydrates"></label><input type="text" placeholder="Кількість вуглеводів" id="carbohydrates" autocomplete="off">
+        <button id="finish__from">Додати</button>
+    </div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        let finish_from = document.getElementById("finish__from");
+
+
+        finish_from.addEventListener("click", () => {
+            let intake = document.getElementById("intake").value;
+            let food_name = document.getElementById("food_name").value;
+            let сalories = document.getElementById("сalories").value;
+            let proteins = document.getElementById("proteins").value;
+            let fats = document.getElementById("fats").value;
+            let carbohydrates = document.getElementById("carbohydrates").value;
+
+            let data = {
+                intake: intake,
+                food_name: food_name,
+                сalories: сalories,
+                proteins: proteins,
+                fats: fats,
+                carbohydrates: carbohydrates
+            };
+
+            tg.sendData(JSON.stringify(data));
+            tg.close();
+        });
+    </script>
+</body>
+</html>
