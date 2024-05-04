@@ -15,7 +15,7 @@ TEST_USER = User(id=123,
                  supports_inline_queries=None)
 
 TEST_CHAT = Chat(
-    id=12,
+    id=123234,
     type="private",
     title=None,
     username=TEST_USER.username,
@@ -39,7 +39,7 @@ TEST_CHAT = Chat(
     location=None,
 )
 
-TEST_MESSAGE = Message(message_id=123, date=datetime.now(), chat=TEST_CHAT)
+TEST_MESSAGE = Message(message_id=123, date=datetime.now(), chat=TEST_CHAT, text="")
 
 
 def get_message(txt: str):

@@ -16,7 +16,7 @@ class DatabaseManager:
     Клас DatabaseManager використовується для підключення до бази даних MySQL,
     містить паттерн Singleton, який не допускає більше одного екземпляру класу,
     виконується з допомогою тандемних методів __new__ та __del__. Також є конструкція __init__
-    яка містить host, user, password, database та підключення до бази даних mydb
+    яка містить host, user, password, data та підключення до бази даних mydb
     """
 
     _instance = None
@@ -402,6 +402,8 @@ class DatabaseManager:
     async def check_if_the_user_has_any_training(self, tg_id: int):
         """
             Перевіляє чи є вже тренування у користувача 0/1...n
+        :param tg_id:
+        :return:
         """
         try:
             sql_command = """
@@ -499,7 +501,11 @@ class DatabaseManager:
                                                     muscle_group: int,
                                                     sporting_exercise_id: int) -> None:
         """
-            add_an_exercise_to_my_workout_routine додає тренуання до заданого пористувача
+            add_an_exercise_to_my_workout_routine додає тренуання до заданого користувача
+            %s(placeholders) - символ інєкції
+            використовуємо контекстний менеджер with який робить автоматичне закриття з'єднання
+            (асинхронно) відкриваємо з'єднання, робимо передачу даних у БД,
+            передаємо sql_command і кортеж (даних, що передаються)
         :param user_id:  id користувача
         :param workout_day: id дня тижня
         :param muscle_group: id м'язової групи
@@ -575,6 +581,8 @@ class DatabaseManager:
             async with self.__mydb.cursor() as cursor:
                 await cursor.execute(sql_command, (telegram_id,))
                 data = await cursor.fetchall()
+                if len(data) == 0:
+                    return data
                 data = int(data[0][0])
                 return data
         except aiomysql.Error as exc:

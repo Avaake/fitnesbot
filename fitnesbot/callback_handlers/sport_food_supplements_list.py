@@ -13,7 +13,7 @@ class SupplementsMenu(BasicInitialisationBot):
     async def additives_menu(self, call: CallbackQuery) -> None:
         res = await self.db_manager.additives_inline()
         print(res)
-        await call.message.edit_text(text='<b>Виберай</b>',
+        await call.message.edit_text(text='<b>Виберай карегорію та отримуй інформацію</b>',
                                      reply_markup=fabrics.inline_builder_sql(res, back_cb='start'))
         await call.answer()
 

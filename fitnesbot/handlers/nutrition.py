@@ -10,7 +10,7 @@ from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 class Nutrition(BasicInitialisationBot):
     async def nutrition_handler(self, call: CallbackQuery):
-        await call.message.edit_text(text="Тут зможешь ортимати інформацію стосовно харчування",
+        await call.message.edit_text(text="Тут зможешь отримати інформацію стосовно харчування",
                                      reply_markup=nutrition_menu)
         await call.answer()
 

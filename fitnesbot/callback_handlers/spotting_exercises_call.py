@@ -22,7 +22,7 @@ class SpottingExercises(BasicInitialisationBot):
                                      reply_markup=inline.training_menu)
         await call.answer()
 
-    async def cmd_list_workout(self, call: CallbackQuery, state: FSMContext):
+    async def list_of_sports_exercises(self, call: CallbackQuery, state: FSMContext):
         """
             обробники відповідає на кнопку 'Фітнес-Меню' та callback fitness_menu
             та повертає Inline клавіатуру з завдани мязів
@@ -51,7 +51,7 @@ class SpottingExercises(BasicInitialisationBot):
 
     async def run(self):
         self.dp.callback_query.register(self.cmd_workouts, F.data == "workouts")
-        self.dp.callback_query.register(self.cmd_list_workout, F.data == "fitness_menu")
+        self.dp.callback_query.register(self.list_of_sports_exercises, F.data == "fitness_menu")
         self.dp.callback_query.register(self.cmd_muscle_name, F.data.in_(
             ["muscle2", "muscle1", "muscle3", "muscle4", "muscle5",
              "muscle6", "muscle7", "muscle8", "muscle9", "muscle10"]),

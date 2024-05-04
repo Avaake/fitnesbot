@@ -1,7 +1,7 @@
 from aiogram import Dispatcher, Bot
 
 from config import settings
-from database.database import DatabaseManager
+from data.database import DatabaseManager
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.enums import ParseMode

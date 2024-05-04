@@ -5,8 +5,7 @@ from aiogram import Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from mocked_bot import MockedBot
-from database.database import DatabaseManager
-
+from data.database import DatabaseManager
 
 @pytest_asyncio.fixture(scope="session")
 async def memory_storage():

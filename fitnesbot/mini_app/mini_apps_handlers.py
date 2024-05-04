@@ -37,7 +37,7 @@ class TelegramMiniAppsHandlers(BasicInitialisationBot):
         AMR = activity_level_dict.get(activity_level, 1.2)
         goal_multiplier = goal_dict.get(goal, 1.0)
 
-        calories = round(AMR * BMR * goal_multiplier)
+        calories = round(AMR * BMR * goal_multiplier) #1928 482 214
         proteins = round((0.15 * calories) / 4)
         fets = round((0.25 * calories) / 9)
         carbohydrates = round((0.60 * calories) / 4)
@@ -115,6 +115,6 @@ class TelegramMiniAppsHandlers(BasicInitialisationBot):
         self.dp.message.register(self.selection_of_diseases_web_handler,
                                  F.web_app_data.button_text == "Вибір присутніх захворювань")
         self.dp.message.register(self.selection_of_diseases_web_handler_in_create_workout,
-                                 F.web_app_data.button_text == "Спочатку вебери свої захворювання")
+                                 F.web_app_data.button_text == "Спочатку вибери свої захворювання")
         self.dp.message.register(self.handler_mini_app_adding_food,
                                  F.web_app_data.button_text == "Додавання прийому їжі")

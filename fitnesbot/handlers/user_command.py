@@ -7,19 +7,22 @@ from fitnesbot.keybords.fabrics import inline_back_button
 from fitnesbot.utils.basemodel import BasicInitialisationBot
 from fitnesbot.utils.states import LetterToTechnicalSupport
 
-class User(BasicInitialisationBot):
+
+class UserCommans(BasicInitialisationBot):
     """
         Клас User містить обробники команд які доступні всім користувачас
     """
 
     async def cmd_start(self, message: Message):
         """Обробник команди start"""
-        await message.answer(f'Hello {message.from_user.first_name}', reply_markup=menu)
+        await message.answer(f'Привіт {message.from_user.first_name}, це головне меню боту',
+                             reply_markup=menu)
 
     async def call_cmd_start(self, call: CallbackQuery, state: FSMContext):
         """Обробник команди start"""
         await state.clear()
-        await call.message.edit_text(f'Hello {call.message.from_user.first_name}', reply_markup=menu)
+        await call.message.edit_text(f'Привіт {call.message.from_user.first_name}, це головне меню боту ',
+                                     reply_markup=menu)
 
     async def call_help_handler(self, call: CallbackQuery):
         await call.message.edit_text(f'{call.message.from_user.first_name} тут ти зможешь отримати '
@@ -34,13 +37,14 @@ class User(BasicInitialisationBot):
         await call.message.edit_text(text="""Створюй та відправляй повідомлення до нас.
                             З повагою підтримка Fitnessbot""")
 
+
     async def send_a_message_to_technical_support(self, message: Message, state: FSMContext):
         await state.update_data(letter_in_support=message.text)
         data = await state.get_data()
         await self.bot.send_message(chat_id=821674004, text=data['letter_in_support'])
+        await message.answer("Повідомлення було надіслано.")
         del data['letter_in_support']
         await state.set_data(data)
-        await message.answer("Повідомлення було надіслано .")
         return await self.cmd_start(message=message)
 
     async def cancel_handler(self, message: Message, state: FSMContext):
@@ -65,4 +69,3 @@ class User(BasicInitialisationBot):
                                         F.data == "letter_to_technical_support")
         self.dp.message.register(self.send_a_message_to_technical_support, LetterToTechnicalSupport.letter_in_support)
         self.dp.message.register(self.cancel_handler, Command("cancel"))
-

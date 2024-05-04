@@ -1,5 +1,5 @@
 import logging
-from api import app
+from app import app
 import uvicorn
 
 

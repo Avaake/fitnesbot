@@ -1,6 +1,6 @@
 from aiogram import BaseMiddleware
 from typing import Any, Callable, Dict, Awaitable
-from database.database import DatabaseManager
+from data.database import DatabaseManager
 from aiogram.types import TelegramObject
 import logging
 

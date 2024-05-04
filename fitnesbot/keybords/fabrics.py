@@ -83,6 +83,7 @@ def paginator_muscle(link: str, page: int = 0):
         InlineKeyboardButton(text='Відео с вправою', url=link),
         InlineKeyboardButton(text='➡', callback_data=Paginationmuscleatlets(action='next_ma', page=page).pack()),
     )
+    builder.row(InlineKeyboardButton(text="Тренування від спотрсменів", callback_data="training_from_athletes"))
     return builder.as_markup()
 
 
@@ -189,7 +190,7 @@ def build_inline_keyboard(buttons: list, add_cb: str = None):
 
 
 def inline_builder_sql(buttons: List[tuple],
-                       sizes: int | List[int] = 2,
+                       sizes: int = 2,
                        back_txt: str = "⬅ Назад",
                        back_cb: str = None,
                        call_url: str = None,

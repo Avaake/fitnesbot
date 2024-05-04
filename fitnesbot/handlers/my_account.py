@@ -17,11 +17,10 @@ class MyAccount(BasicInitialisationBot):
             Повертає Inline клавіатуру особистого кабінету
         """
         await call.message.edit_text(text=f"Привіт {call.from_user.first_name}! Це твій особистий кабінет. "
-                                          f"Можеш починати тичяти по кнопкам",
-                                     reply_markup=my_account_menu)
+                                          f"Можеш починати тичяти по кнопкам", reply_markup=my_account_menu)
         await call.answer()
 
-    async def my_training_account(self, call: CallbackQuery):
+    async def my_training_account(self, call: CallbackQuery) -> None:
         """
             Перевіряє тренування якщо є то певертає тренування, якщо немає
             то пропонує створити тренування
@@ -57,11 +56,11 @@ class MyAccount(BasicInitialisationBot):
                 call.from_user.id,
                 text="Привіт! Спочатку тицяй на кнопку та вибери всі захворювання які в тебе є, "
                      "щоб отримати рекоментації по спортивним впраа",
-                reply_markup=builders.web_keyboard_builder(txt="Спочатку вебери свої захворювання",
+                reply_markup=builders.web_keyboard_builder(txt="Спочатку вибери свої захворювання",
                                                            webapp="/users/disease")
             )
         else:
-            await call.message.delete()
+            # await call.message.delete()
             response = await self.db_manager.my_workout_day()
             await state.set_state(CreateMyWorkout.my_workout_day)
             await self.bot.send_message(call.from_user.id, text="Обирай день тренування",
@@ -152,7 +151,7 @@ class MyAccount(BasicInitialisationBot):
     async def the_day_of_my_training_programme(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(MyWorkoutProgrammeDay.my_training_programme_day)
         response = await self.db_manager.my_training_program_training_day(telegram_id=call.from_user.id)
-        await call.message.edit_text(text="Це дні тренувааня вашої програми",
+        await call.message.edit_text(text="Це дні тренування вашої програми",
                                      reply_markup=inline_builder_sql(buttons=response, back_cb="my_account_workout"))
 
     async def a_sporting_exercise_in_my_training_programme(self, call: CallbackQuery, state: FSMContext):

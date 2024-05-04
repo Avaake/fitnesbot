@@ -85,7 +85,7 @@ category_food = InlineKeyboardMarkup(
 training_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [
-            InlineKeyboardButton(text='Фитнес-Меню', callback_data='fitness_menu')
+            InlineKeyboardButton(text='Спортивні вправи', callback_data='fitness_menu')
         ],
         [
             InlineKeyboardButton(text='Програми тренувань від спортсменів', callback_data='training_from_athletes')
@@ -178,6 +178,12 @@ training_at_home_menu = InlineKeyboardMarkup(
                 callback_data='third_training_at_home'
             )
         ],
+        [
+            InlineKeyboardButton(
+                text="Назад",
+                callback_data='workouts'
+            )
+        ],
     ]
 )
 
@@ -192,7 +198,7 @@ my_activity_tracker_menu = InlineKeyboardMarkup(
                                  callback_data="add_meals_call")
         ],
         [
-            InlineKeyboardButton(text="⬅ Назад", callback_data="activity_trackers_call")
+            InlineKeyboardButton(text="⬅ Назад", callback_data="my_account")
         ]
     ]
 )

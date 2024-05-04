@@ -16,17 +16,17 @@ storage = MemoryStorage()
 
 class RunBot(BasicInitialisationBot):
     def __init__(self):
-        self.user_command = user_command.User()
+        self.user_command = user_command.UserCommans()
         self.products = products.AddProducts()
-        self.food_count = nutrition.Nutrition()
+        self.nutrition = nutrition.Nutrition()
         self.pag = pagination.Pagin()
-        self.train_call = spotting_exercises_call.SpottingExercises()
+        self.spotting_exercises_call = spotting_exercises_call.SpottingExercises()
         self.sport_food_supplements_list = sport_food_supplements_list.SupplementsMenu()
         self.mini_apps_handlers = mini_apps_handlers.TelegramMiniAppsHandlers()
         self.training_from_athletes = training_from_athletes.TrainingFromAthletes()
         self.training_at_home = training_at_home.TrainingAtHome()
         self.my_account = my_account.MyAccount()
-        self.my_workout_time = my_activity_tracker.MyActivityTracker()
+        self.my_activity_tracker = my_activity_tracker.MyActivityTracker()
 
     async def lifespan(self, app: FastAPI) -> AppType:
         try:
@@ -36,15 +36,15 @@ class RunBot(BasicInitialisationBot):
             await self.db_manager.connect_db()
             await self.user_command.run()
             await self.products.run()
-            await self.food_count.run()
+            await self.nutrition.run()
             await self.pag.run()
-            await self.train_call.run()
+            await self.spotting_exercises_call.run()
             await self.sport_food_supplements_list.run()
             await self.mini_apps_handlers.run()
             await self.training_from_athletes.run()
             await self.training_at_home.run()
             await self.my_account.run()
-            await self.my_workout_time.run()
+            await self.my_activity_tracker.run()
 
             self.dp.message.middleware(RegisterCheckMiddleware(self.db_manager))
             yield
