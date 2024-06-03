@@ -7,9 +7,6 @@ from fitnesbot.utils.states import MuscleIDs
 from fitnesbot.utils.basemodel import BasicInitialisationBot
 
 
-# muscle = func.MuscleID
-
-
 class SpottingExercises(BasicInitialisationBot):
     """Клас TrainingCall містить обробники з тренуванням"""
 
@@ -27,11 +24,10 @@ class SpottingExercises(BasicInitialisationBot):
             обробники відповідає на кнопку 'Фітнес-Меню' та callback fitness_menu
             та повертає Inline клавіатуру з завдани мязів
         """
-        res = await self.db_manager.muscle_group_inline()
-        # print(res)
+        response = await self.db_manager.muscle_group_inline()
         await state.set_state(MuscleIDs.muscle_id)
         await call.message.edit_text(f"<b>Виберіть групу м'язів, для якої ви хочете переглянути вправи</b>",
-                                     reply_markup=fabrics.inline_builder_sql(res, sizes=3, back_cb='workouts'))
+                                     reply_markup=fabrics.inline_builder_sql(response, sizes=3, back_cb='workouts'))
         await call.answer()
 
     async def cmd_muscle_name(self, call: CallbackQuery, state: FSMContext):
@@ -41,9 +37,8 @@ class SpottingExercises(BasicInitialisationBot):
         """
         await state.update_data(muscle_id=func.CALL_MUSCLE_GROUP.get(call.data))
         data = await state.get_data()
-        # await state.clear()
-        res = await self.db_manager.sports_trein(muscl_id=data.get('muscle_id'))
-        await call.message.edit_text(f'<b>Назва<a href="{res[0][1]}">:</a></b> {res[0][0]}',
+        response = await self.db_manager.sports_trein(muscl_id=data.get('muscle_id'))
+        await call.message.edit_text(f'<b>Назва<a href="{response[0][1]}">:</a></b> {response[0][0]}',
                                      reply_markup=fabrics.paginator_muscle_worcout())
 
     async def call_training_with_fitness_bands(self, call: CallbackQuery):

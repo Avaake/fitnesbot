@@ -28,35 +28,6 @@ MY_WORKOUT_DAY = {
 }
 
 
-def isfloat(value):
-    try:
-        float(value)
-        return True
-    except:
-        return False
-
-
-def f(text):
-    txt = ''
-    for char in text:
-        char_lower = char.lower()
-        if char_lower in UK_EN_ALPHABET:
-            txt += UK_EN_ALPHABET[char_lower]
-    return txt
-
-
-class WorkoutAthletes:
-    sportsman_name: str
-
-
-class WorkoutDay:
-    workout_day: str
-
-
-class MuscleGroup:
-    muscle_group: str
-
-
 class MuscleID:
     muscle_id: str
 

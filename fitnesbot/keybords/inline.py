@@ -130,12 +130,6 @@ mein2 = InlineKeyboardMarkup(
     ]
 )
 
-# Біцепс
-# Трицепс
-# Прес
-# Передпліччя
-# Ікри
-
 my_account_menu = InlineKeyboardMarkup(
     inline_keyboard=[
         [

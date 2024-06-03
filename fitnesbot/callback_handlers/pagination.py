@@ -15,6 +15,9 @@ class Pagin(BasicInitialisationBot):
     """Клас Pagin містить пагінації для інших команд """
 
     async def paginator_my_workout(self, call: CallbackQuery, callback_data: fabrics.Pagination):
+        """
+            В розробці
+        """
         response = await self.db_manager.sports_exercises()
 
         page_num = int(callback_data.page)

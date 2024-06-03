@@ -15,7 +15,9 @@ def isfloat(value):
 
 
 class AddProducts(BasicInitialisationBot):
-
+    """
+        Врозробці тільки для адмінів
+    """
     async def cmd_product(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(ProductFPC.product_name)
         await call.message.answer("Давай почнемо, введи назву продукту")

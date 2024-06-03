@@ -7,10 +7,6 @@ import aiomysql
 from config import settings
 
 
-def calorie_calculation(x, y):
-    return (float(x) / float(100)) * float(y)
-
-
 class DatabaseManager:
     """
     Клас DatabaseManager використовується для підключення до бази даних MySQL,
@@ -100,9 +96,11 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def add_products(self, username: str, *args: List):
+        """
+            В розробці
+        """
         try:
-
-            sql_command = """INSERT INTO products (product_name, calorie_value, fats, proteins, carbohydrates, users) 
+            sql_command = """INSERT INTO products1 (product_name, calorie_value, fats, proteins, carbohydrates, users) 
                              VALUES (%s, %s, %s, %s, %s, %s)"""
             values = list(*args)
             values.append(username)
@@ -205,6 +203,9 @@ class DatabaseManager:
             logging.error(f"{exc}")
 
     async def food_index(self, product_name):
+        """
+            В розробці
+        """
         try:
             sql_command = (
                 "select products_category_id "
@@ -448,7 +449,7 @@ class DatabaseManager:
             if exercise_ids != 0:
                 exercise_ids = ','.join(map(str, exercise_ids))
             sql_command = f"""
-                SELECT exercise_photo, exercise
+                SELECT link, exercise
                 FROM sports_exercises
                 WHERE muscl_id = %s AND exercise_id NOT IN ({exercise_ids})
             """

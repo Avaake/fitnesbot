@@ -9,11 +9,6 @@ class ProductFPC(StatesGroup):
     carbohydrates = State()
 
 
-class FoodCounting(StatesGroup):
-    meal = State()
-    food = State()
-
-
 class ADG(StatesGroup):
     sportsman_name = State()
     workout_day_athletes = State()
@@ -22,10 +17,6 @@ class ADG(StatesGroup):
 
 class MuscleIDs(StatesGroup):
     muscle_id = State()
-
-
-class AdditiveNamesCall(StatesGroup):
-    additive_name_call = State()
 
 
 class TrainingAtHomeCall(StatesGroup):

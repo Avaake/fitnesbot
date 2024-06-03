@@ -22,7 +22,6 @@ class TrainingAtHome(BasicInitialisationBot):
     async def cmd_training_at_home_day(self, call: CallbackQuery, state: FSMContext):
         await state.set_state(TrainingAtHomeCall.title_call)
         response = await self.db_manager.training_at_home_day(str(call.data))
-        print(response)
         await call.message.edit_text(text=f"Тицяй та погнали",
                                      reply_markup=fabrics.inline_builder_sql(response, back_cb="training_at_home"))
 
@@ -30,7 +29,6 @@ class TrainingAtHome(BasicInitialisationBot):
         """
             Обробник для тренувань повертає інформації про тренування + пагінация
         """
-        print(str(call.data))
         response = await self.db_manager.training_at_home(str(call.data))
         await state.update_data(title_call=str(call.data))
         await call.message.edit_text(

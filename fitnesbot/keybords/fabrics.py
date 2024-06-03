@@ -145,19 +145,6 @@ def pagination_to_view_recipes_kb(page: int = 0) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def build_inline_keyboard_sql(buttons: list):
-    # call_buttons = [{'text': ''.join(buttons[i]), 'callback_data': f(str(buttons[i]))} for i in range(len(buttons))]
-    call_buttons = []
-    for i in range(len(buttons)):
-        b = {'text': str(buttons[i][0]), 'callback_data': str(buttons[i][-1])}
-        print(b)
-        call_buttons.append(b)
-    builder = InlineKeyboardBuilder()
-    for button in call_buttons:
-        builder.row(InlineKeyboardButton(text=button['text'], callback_data=button['callback_data']))
-    return builder.as_markup()
-
-
 def build_inline_keyboard(buttons: list, add_cb: str = None):
     call_buttons = [{'text': ''.join(buttons[i]), 'callback_data': f(str(buttons[i]))} for i in range(len(buttons))]
     # print(call_buttons)
@@ -168,25 +155,6 @@ def build_inline_keyboard(buttons: list, add_cb: str = None):
     if add_cb is not None:
         builder.row(InlineKeyboardButton(text="Назад", callback_data=add_cb))
     return builder.as_markup()
-
-
-# def inline_builder(text: str | List[str],
-#                    callback_data: str | List[str],
-#                    sizes: int | List[int] = 2, **kwargs) -> InlineKeyboardMarkup:
-#     builder = InlineKeyboardBuilder()
-#     if isinstance(text, str):
-#         text = [text]
-#     if isinstance(callback_data, str):
-#         callback_data = [callback_data]
-#     if isinstance(sizes, int):
-#         sizes = [sizes]
-#
-#     [
-#         builder.button(text=txt, callback_data=cb)
-#         for txt, cb in zip(text, callback_data)
-#     ]
-#     builder.adjust(*sizes)
-#     return builder.as_markup(**kwargs)
 
 
 def inline_builder_sql(buttons: List[tuple],

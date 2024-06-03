@@ -11,26 +11,25 @@ class SupplementsMenu(BasicInitialisationBot):
     """
 
     async def additives_menu(self, call: CallbackQuery) -> None:
-        res = await self.db_manager.additives_inline()
-        print(res)
+        response = await self.db_manager.additives_inline()
         await call.message.edit_text(text='<b>Виберай карегорію та отримуй інформацію</b>',
-                                     reply_markup=fabrics.inline_builder_sql(res, back_cb='start'))
+                                     reply_markup=fabrics.inline_builder_sql(response, back_cb='start'))
         await call.answer()
 
     async def additives_groups(self, call: CallbackQuery) -> None:
-        res = await self.db_manager.additives_groups_inline2(call.data)
-        if len(res) == 0:
-            res = await self.db_manager.additives_groups_inline(call.data)
-            await call.message.edit_text(text=res[0][0],
+        response = await self.db_manager.additives_groups_inline2(call.data)
+        if len(response) == 0:
+            response = await self.db_manager.additives_groups_inline(call.data)
+            await call.message.edit_text(text=response[0][0],
                                          reply_markup=fabrics.inline_back_button(title="Назад",
                                                                                  callback_title="additives_call",
-                                                                                 call_url=res[0][-1]))
+                                                                                 call_url=response[0][-1]))
         else:
-            result = [(i[0], i[1]) for i in res]
-            await call.message.edit_text(text=res[0][2],
+            result = [(i[0], i[1]) for i in response]
+            await call.message.edit_text(text=response[0][2],
                                          reply_markup=fabrics.inline_builder_sql(result, sizes=3,
                                                                                  back_cb="additives_call",
-                                                                                 call_url=res[0][-1]))
+                                                                                 call_url=response[0][-1]))
         await call.answer()
 
     async def additives_subgroup(self, call: CallbackQuery) -> None:

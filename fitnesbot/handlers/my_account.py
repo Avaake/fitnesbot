@@ -74,24 +74,25 @@ class MyAccount(BasicInitialisationBot):
         response = await self.db_manager.muscle_group_inline()
         await state.update_data(my_workout_day=MY_WORKOUT_DAY.get(call.data))
         await state.set_state(CreateMyWorkout.my_muscle_group)
-        data = await state.get_data()
-        print(f"create_my_workout_load_workout_day {data}")
         await call.message.edit_text(text="Обирай м'язову групу",
                                      reply_markup=inline_builder_sql(response, sizes=3, back_cb="my_account"))
 
     async def create_my_workout_load_muscle_group(self, call: CallbackQuery, state: FSMContext):
         """
-            Повертає відео та назву вправи + пагінация
-            обновляєт CreateMyWorkout.muscle_group
-            recommendation_response мустить індекс рекомеднації користувача (on/off)
-            recommendation_response == 1 тоді отриміемо id противоказанань по спотривних вправах
+            Повертає відео та назву вправи з урахуванням рекемендаційної системи + пагінация
+            оновлює CreateMyWorkout.muscle_group
+            Рекомендаційна система:
+                recommendation_response мустить індекс рекомеднації користувача увімкнена чи ні (1/0)
+                recommendation_response == 1 тоді в response отриміємо id вправ які не рекомендаються виконувати
+                (беремо з бази знань), має вигляд ((1,),(2,),...) або None
+                response_sports_exercises - list[typle] [("посалання на відео вправи", "Назва вправи"),...]
         """
         muscle_id = CALL_MUSCLE_GROUP.get(call.data)
         recommendation_response = await self.db_manager.view_the_index_of_recommendations(call.from_user.id)
         if recommendation_response == 1:
             response = await self.db_manager.exercises_that_are_not_recommended_for_the_disease(call.from_user.id)
             if response is not None:
-                exercise_id_list = [j for i in response for j in i]
+                exercise_id_list = [j for i in response for j in i]    # list[typle] -> list[int]
             else:
                 exercise_id_list = 0
             response_sports_exercises = await self.db_manager.my_sports_exercises_in_training(
@@ -111,7 +112,6 @@ class MyAccount(BasicInitialisationBot):
             Цей callback додає вправу в тренування(БД)
         """
         data = await state.get_data()
-        print(f"create_my_workout_load_sporting_exercise {data}")
         user_id = await self.db_manager.check_telegram_id(call.from_user.id)
         sporting_exercise_id = await self.db_manager.check_sporting_exercise_id(data.get('my_sporting_exercise'))
         await self.db_manager.add_an_exercise_to_my_workout_routine(user_id=user_id,
